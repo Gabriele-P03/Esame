@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static Seed SEED;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
