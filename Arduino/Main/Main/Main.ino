@@ -191,9 +191,9 @@ void bluetooth()
         }
     }
 
-    blue->write(t);
-    blue->write(h);
-    blue->write(l);
+    blue->write((unsigned char)(int)t);
+    blue->write((unsigned char)(int)h);
+    blue->write((unsigned char)(int)l);
 }
 
 void warm_up(bool state) { digitalWrite(FAN_IN, state ? HIGH : LOW); }
