@@ -26,6 +26,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.greenhouse.blt.BluetoothActivity;
+import com.greenhouse.cloud.DataBaseActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,6 +79,14 @@ public class MainActivity extends AppCompatActivity {
      */
     public void bltButtonOnClick(View v){
         startActivity(new Intent(this.getApplicationContext(), BluetoothActivity.class));
+    }
+
+    /**
+     * Called once user presses cloud button
+     * @param v
+     */
+    public void cloudButtonOnClick(View v){
+        startActivity(new Intent(this.getApplicationContext(), DataBaseActivity.class));
     }
 
     /**

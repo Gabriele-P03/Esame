@@ -62,7 +62,8 @@ public class BLTSocket extends Service {
                 is = socket.getInputStream();
                 os = socket.getOutputStream();
                 isBtConnected = true;
-                Toast.makeText(context, "Device Selected: " + device.getName() + "\n" + device.getAddress(), Toast.LENGTH_SHORT).show();
+
+                this.tryIfConnected(context);
 
             }catch (IOException e) {
 
@@ -120,13 +121,13 @@ public class BLTSocket extends Service {
                     return;
                 }
 
-                byte[] survey = new byte[12];
+                byte[] survey = new byte[3];
                 try {
                     /*
                         Once got the current values of the three surveys,
                         it sets the relative progress bar and the text view
                      */
-                    if(is.read(survey, 0, 12) >= 0){
+                    if(is.read(survey, 0, 3) >= 0){
                         for(int i = 0; i < 3; i++){
 
                             int x = survey[i];
@@ -215,6 +216,26 @@ public class BLTSocket extends Service {
             isBtConnected = false;
             BluetoothActivity.bltSocket = null;
         }catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Called once device is connected to HC-05. It sends a kind of TCP packet.
+     * e.g.
+     *  Smartphone sends to HC-05 a simple packet in order to check if bluetooth module can receive
+     *  HC-05 sends a packet in order to check if smartphone can receive
+     */
+    private void tryIfConnected(Context context){
+        try {
+            os.write('c');
+            os.flush();
+            if(is.read() > 0){
+                Toast.makeText(context, "Device Selected: " + device.getName() + "\n" + device.getAddress(), Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(context, "Could not connect to device selected: " + device.getName() + "\n" + device.getAddress(), Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

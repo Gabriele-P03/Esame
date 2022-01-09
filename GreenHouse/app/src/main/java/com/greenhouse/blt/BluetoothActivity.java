@@ -92,7 +92,7 @@ public class BluetoothActivity extends AppCompatActivity {
                         deviceSelected = (BluetoothDevice) pairedDevices.toArray()[pos];
                         bltSocket = new BLTSocket(deviceSelected.getAddress(), this.getApplicationContext());
                         if (bltSocket.isBltConnected() && getSystemServiceName(BLTSocket.class) == null) {
-                            //startService(new Intent(this, BLTSocket.class));
+                            startService(new Intent(this, BLTSocket.class));
                         }else{
                             deviceSelected = null;
                         }

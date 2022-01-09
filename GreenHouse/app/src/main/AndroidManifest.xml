@@ -14,30 +14,29 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.GreenHouse">
 
+        <activity
+                android:name=".cloud.DataBaseActivity"
+                android:theme="@style/Theme.GreenHouse.NoActionBar">
+        </activity>
 
         <activity
                 android:name=".SeedActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
         </activity>
 
-
         <activity
                 android:name=".MainActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
         </activity>
-
-
         <activity
                 android:name=".blt.BluetoothActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
         </activity>
-
 
         <service android:name=".blt.BLTSocket">
         </service>

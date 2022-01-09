@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/background"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".cloud.DataBaseActivity">
+
+
+    <!-- Info about db connection-->
+    <TextView
+            android:id="@+id/db_state_tv"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:text="Database offline..."
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+    />
+
+    <!-- Edit Text for insert IP of DB-->
+    <EditText
+            android:id="@+id/db_ip_et"
+            android:textColor="@color/white"
+            android:text="Insert an IP"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/db_state_tv"/>
+
+    <Button
+            android:backgroundTint="#888888"
+            android:id="@+id/dismiss_new_seed_button"
+            android:text="dismiss"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginRight="5dp"
+            android:onClick="dismissCloudActivity"/>
+
+    <Button
+            android:backgroundTint="#888888"
+            android:id="@+id/save_new_seed_button"
+            android:text="save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:onClick="sendData"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
