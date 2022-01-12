@@ -56,10 +56,13 @@
         $query = "INSERT INTO Conta_serra ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL) VALUES($DATE, $PLANTS, $LEAVES, $MAX_HEIGHT)";
     }
 
-    echo $query;
+    //Debugging purpose
+    //echo $query;
 
-    if(!mysqli_query($conn, "SELECT current_user")){
+    if(!mysqli_query($connection, $query)){
         echo("Error: ".mysqli_error($connection));
+    }else{
+        echo 200;
     }
 
     mysqli_close($connection);
