@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.greenhouse">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN"/>
@@ -12,18 +13,17 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/Theme.GreenHouse">
+            android:theme="@style/Theme.GreenHouse"
+            android:usesCleartextTraffic="true">
 
         <activity
                 android:name=".cloud.DataBaseActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
         </activity>
-
         <activity
                 android:name=".SeedActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
         </activity>
-
         <activity
                 android:name=".MainActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">

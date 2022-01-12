@@ -26,13 +26,15 @@ import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import com.greenhouse.R;
+import com.greenhouse.cloud.HttpRest.HttpRestConnection;
 
 import java.io.*;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
 public class DataBaseActivity extends AppCompatActivity {
 
     private String ip;
-    private RESTFulConnection conn;
 
     private EditText DB_ip;
     private TextView DB_state;
@@ -49,28 +51,18 @@ public class DataBaseActivity extends AppCompatActivity {
         this.loadIP();
     }
 
-    /**
-     * Called for initializing connection with a db
-     */
-    private void connect(){
-        if(!this.isConnected()){
-            this.settingNewDBState("Connecting...");
-            if(this.isValidIP(this.ip)){
-
-            }else{
-                this.settingNewDBState("IP invalid...");
-            }
-        }
-    }
 
     /**
      * Called when user presses send button.
      * It will send data to the connected database
      * @param v
      */
-    public void sendData(View v){
-        if(!this.isConnected()){
-            this.connect();
+    public void sendData(View v) {
+        this.ip = this.DB_ip.getText().toString();
+        if (this.isValidIP(this.ip)) {
+            this.saveNewIP();
+            new HttpRestConnection(this.ip, this.DB_state, this.getApplicationContext(), this.getRequestParameter())
+                    .execute();
         }
     }
 
@@ -83,29 +75,26 @@ public class DataBaseActivity extends AppCompatActivity {
      * @param v
      */
     public void dismissCloudActivity(View v){
-        this.disconnect();
         this.saveNewIP();
         this.finish();
     }
 
-    /**
-     * Called for disconnecting from db
-     */
-    private void disconnect(){
-        if(this.isConnected()){
-            this.settingNewDBState("Disconnecting...");
-        }
-    }
 
     /**
-     * @return if it is connected to a db
+     * @return the values to have to be insert into database as a unique string,
+     * every parameters as separated by '&'
      */
-    public boolean isConnected(){
-        return this.conn == null ? false : this.conn.isConnected();
-    }
+    private String getRequestParameter(){
+        String params = "";
 
-    private void settingNewDBState(String info){
-        this.DB_state.setText(info);
+        params += "type_gh=" + (this.ghSwitch.isChecked() ? "o" : "i") + "&";
+        params += "date='2022/01/01'&";
+        params += "max_height=" + this.pickers[0].getValue() + "&";
+        params += "plants=" + this.pickers[1].getValue() + "&";
+        params += "leaves=" + this.pickers[2].getValue();
+
+        Toast.makeText(this.getApplicationContext(), params, Toast.LENGTH_LONG).show();
+        return params;
     }
 
     /**
