@@ -60,10 +60,17 @@
     //echo $query;
 
     if(!mysqli_query($connection, $query)){
-        echo("Error: ".mysqli_error($connection));
+        echo("Error ".mysqli_errno($connection));
     }else{
-        echo 200;
+        echo http_response_code();
     }
 
     mysqli_close($connection);
+    x();
+?>
+
+<?php
+    function x(){
+        
+    }
 ?>

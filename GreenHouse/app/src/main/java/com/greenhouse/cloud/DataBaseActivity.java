@@ -63,6 +63,7 @@ public class DataBaseActivity extends AppCompatActivity {
             this.saveNewIP();
             new HttpRestConnection(this.ip, this.DB_state, this.getApplicationContext(), this.getRequestParameter())
                     .execute();
+
         }
     }
 
@@ -92,6 +93,10 @@ public class DataBaseActivity extends AppCompatActivity {
         params += "max_height=" + this.pickers[0].getValue() + "&";
         params += "plants=" + this.pickers[1].getValue() + "&";
         params += "leaves=" + this.pickers[2].getValue();
+
+        if(this.ghSwitch.isChecked()){
+            params += "&temperature=" + this.pickers[3].getValue() + "&humidity=" + this.pickers[4].getValue();
+        }
 
         Toast.makeText(this.getApplicationContext(), params, Toast.LENGTH_LONG).show();
         return params;
