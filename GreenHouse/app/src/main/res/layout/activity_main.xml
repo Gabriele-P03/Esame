@@ -186,4 +186,16 @@
             app:layout_constraintLeft_toRightOf="@id/cloud_button"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
+    <!-- -->
+    <ImageButton
+            android:background="@android:color/transparent"
+            android:src="@mipmap/settings"
+            android:id="@+id/settings_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/temperature_progress_bar"
+            app:layout_constraintLeft_toLeftOf="@id/temperature_progress_bar"
+            android:onClick="openSettingsActivity"
+    />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

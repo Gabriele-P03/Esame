@@ -15,7 +15,8 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.GreenHouse"
             android:usesCleartextTraffic="true">
-
+        <activity android:name=".settings.SettingsActivity">
+        </activity>
         <activity
                 android:name=".cloud.DataBaseActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">

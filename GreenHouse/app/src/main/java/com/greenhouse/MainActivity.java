@@ -27,6 +27,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.greenhouse.blt.BluetoothActivity;
 import com.greenhouse.cloud.DataBaseActivity;
+import com.greenhouse.settings.Settings;
+import com.greenhouse.settings.SettingsActivity;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
         this.seedUpdateButton = findViewById(R.id.update_seed_button);
 
         SEED = Seed.readSeedFromFile(this.getApplicationContext());
+        try {
+            Settings.loadConf(this.getApplicationContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -134,5 +143,14 @@ public class MainActivity extends AppCompatActivity {
         }else{
             this.valuesTV.setText("Tap here to insert a new seed");
         }
+    }
+
+
+    /**
+     * Called when user presses Settings button
+     * @param v
+     */
+    public void openSettingsActivity(View v){
+        startActivity(new Intent(this.getApplicationContext(), SettingsActivity.class));
     }
 }
