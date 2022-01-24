@@ -2,6 +2,7 @@ package com.greenhouse.settings;
 
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.greenhouse.R;
@@ -10,7 +11,6 @@ import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private File file;
     private EditText ip, port, usr, psw;
 
     @Override
@@ -34,6 +34,17 @@ public class SettingsActivity extends AppCompatActivity {
      */
     public void saveSettings(View v){
         try {
+            String buffer = this.psw.getText().toString();
+            for(int i = 0; i < buffer.length(); i++){
+                for(int j = 0; j < buffer.length(); j++){
+                    if(i != j){
+                        if(buffer.charAt(i) == buffer.charAt(j)) {
+                            Toast.makeText(this.getApplicationContext(), "Password cannot have characters repeated", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+                }
+            }
             Settings.saveConf(this.getApplicationContext(), this.ip.getText().toString(), this.port.getText().toString(), this.usr.getText().toString(), this.psw.getText().toString());
         } catch (IOException e) {
             e.printStackTrace();

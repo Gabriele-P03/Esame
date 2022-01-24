@@ -20,6 +20,11 @@ import java.util.ArrayList;
  * If someone even tries to send credentials as not-encrypted, they'll not be taken as valid due
  * to decryption algorithm which will cause a strange sorting result
  *
+ * Password will be saved already encrypted and loaded thus.
+ * Once saved a new password the edit text, even if it has a type-password text, will be changed
+ * with the encrypted one. In this way a raw-password will be present in application only
+ * once written and before been saved
+ *
  * @author Gabriele-P03
  */
 
@@ -82,7 +87,7 @@ public class Settings {
             return;
 
         //Checking password
-        if(password.length() <= 0)
+        if(password.length() <= 1)
             return;
 
         file = new File(context.getFilesDir(), "conf.json");
@@ -92,10 +97,10 @@ public class Settings {
 
         JSONWriter jsonWriter = new JSONWriter(file);
         JSONObject mainObj = new JSONObject("");
-        mainObj.addMap(new JSONMap("ip", IP).toString());
-        mainObj.addMap(new JSONMap("port", port).toString());
-        mainObj.addMap(new JSONMap("username", username).toString());
-        mainObj.addMap(new JSONMap("password", password).toString());
+        mainObj.addMap(new JSONMap("ip", IP));
+        mainObj.addMap(new JSONMap("port", port));
+        mainObj.addMap(new JSONMap("username", username));
+        mainObj.addMap(new JSONMap("password", EncryptFunc.encrypt(password)));
         jsonWriter.write(mainObj);
 
         jsonWriter.close();
