@@ -1,10 +1,13 @@
 package com.greenhouse.settings;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.greenhouse.LoginActivity;
+import com.greenhouse.MainActivity;
 import com.greenhouse.R;
 import java.io.File;
 import java.io.IOException;
@@ -57,5 +60,10 @@ public class SettingsActivity extends AppCompatActivity {
      */
     public void dismissActivitySettings(View v){
         this.finish();
+        if(this.getIntent().getBooleanExtra("login", true)){
+            startActivity(new Intent(this.getApplicationContext(), LoginActivity.class));
+        }else{
+            startActivity(new Intent(this.getApplicationContext(), MainActivity.class));
+        }
     }
 }

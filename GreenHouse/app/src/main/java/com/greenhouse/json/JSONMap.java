@@ -17,7 +17,7 @@ public class JSONMap {
 
     public JSONMap(String key, String value){
         this.key = key.trim();
-        this.value = this.separate(value.trim());
+        this.value = this.separate(value);//Only here it is gonna not trimming
     }
 
     private String key, value;

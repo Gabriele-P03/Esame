@@ -14,7 +14,7 @@
             "name": "Launch currently open script",
             "type": "php",
             "request": "launch",
-            "program": "${file}",
+            "program": "Put.php",
             "cwd": "${fileDirname}",
             "port": 0,
             "runtimeArgs": [

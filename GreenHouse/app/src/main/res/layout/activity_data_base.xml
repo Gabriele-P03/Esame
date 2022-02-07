@@ -15,29 +15,17 @@
             android:id="@+id/db_state_tv"
             android:textColor="@color/white"
             android:textSize="30dp"
-            android:text="Database offline..."
+            android:text="DB offline..."
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/out_in_switch"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/horizontal_picker_layout_db"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
     />
-
-    <!-- Edit Text for insert IP of DB-->
-    <EditText
-            android:id="@+id/db_ip_et"
-            android:textColor="@color/white"
-            android:text="Insert an IP"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="10dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/db_state_tv"/>
-
 
     <Switch
             android:showText="true"
@@ -47,84 +35,100 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/db_state_tv"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/db_state_tv"
             android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
     />
 
-    <!-- Max Height Picker -->
-    <TextView
-            android:gravity="center_horizontal"
-            android:id="@+id/db_max_height_tv"
-            android:textSize="20dp"
-            android:text="Altezza"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toLeftOf="@id/db_plants_tv"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="30dp"
-            app:layout_constraintTop_toBottomOf="@id/db_ip_et"
-    />
-    <NumberPicker
-            android:id="@+id/db_max_height_picker"
-            android:layout_width="0dp"
+    <HorizontalScrollView
+            android:id="@+id/horizontal_picker_layout_db"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:layout_constraintRight_toRightOf="@id/db_max_height_tv"
-            app:layout_constraintLeft_toLeftOf="@id/db_max_height_tv"
-            app:layout_constraintTop_toBottomOf="@id/db_max_height_tv"
-    />
-
-
-    <!-- Plants picker -->
-    <TextView
-            android:gravity="center_horizontal"
-            android:id="@+id/db_plants_tv"
-            android:textSize="20dp"
-            android:text="Piantine"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            app:layout_constraintLeft_toRightOf="@id/db_max_height_tv"
-            app:layout_constraintRight_toLeftOf="@id/db_leaves_tv"
-            app:layout_constraintTop_toTopOf="@id/db_max_height_tv"
-    />
-    <NumberPicker
-            android:id="@+id/db_plants_picker"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:layout_constraintRight_toRightOf="@id/db_plants_tv"
-            app:layout_constraintLeft_toLeftOf="@id/db_plants_tv"
-            app:layout_constraintTop_toBottomOf="@id/db_plants_tv"
-    />
-
-    <!-- Leaves picker -->
-    <TextView
-            android:gravity="center_horizontal"
-            android:id="@+id/db_leaves_tv"
-            android:textSize="20dp"
-            android:text="Foglie"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/db_plants_tv"
-            app:layout_constraintTop_toTopOf="@id/db_plants_tv"
             android:layout_marginRight="10dp"
-    />
-    <NumberPicker
-            android:id="@+id/db_leaves_picker"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            app:layout_constraintRight_toRightOf="@id/db_leaves_tv"
-            app:layout_constraintLeft_toLeftOf="@id/db_leaves_tv"
-            app:layout_constraintTop_toBottomOf="@id/db_leaves_tv"
-    />
+            android:fillViewport="true"
+            app:layout_constraintTop_toBottomOf="@id/db_state_tv"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/db_pickers_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                <!-- Max Height Picker -->
+                <TextView
+                        android:gravity="center_horizontal"
+                        android:id="@+id/db_max_height_tv"
+                        android:textSize="20dp"
+                        android:text="Altezza"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/db_plants_tv"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                />
+                <NumberPicker
+                        android:id="@+id/db_max_height_picker"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintRight_toRightOf="@id/db_max_height_tv"
+                        app:layout_constraintLeft_toLeftOf="@id/db_max_height_tv"
+                        app:layout_constraintTop_toBottomOf="@id/db_max_height_tv"
+                />
 
 
+                <!-- Plants picker -->
+                <TextView
+                        android:gravity="center_horizontal"
+                        android:id="@+id/db_plants_tv"
+                        android:textSize="20dp"
+                        android:text="Piantine"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        app:layout_constraintLeft_toRightOf="@id/db_max_height_tv"
+                        app:layout_constraintRight_toLeftOf="@id/db_leaves_tv"
+                        app:layout_constraintTop_toTopOf="@id/db_max_height_tv"
+                />
+                <NumberPicker
+                        android:id="@+id/db_plants_picker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintRight_toRightOf="@id/db_plants_tv"
+                        app:layout_constraintLeft_toLeftOf="@id/db_plants_tv"
+                        app:layout_constraintTop_toBottomOf="@id/db_plants_tv"
+                />
+
+                <!-- Leaves picker -->
+                <TextView
+                        android:gravity="center_horizontal"
+                        android:id="@+id/db_leaves_tv"
+                        android:textSize="20dp"
+                        android:text="Foglie"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintLeft_toRightOf="@id/db_plants_tv"
+                        app:layout_constraintTop_toTopOf="@id/db_plants_tv"
+                        android:layout_marginRight="10dp"
+                />
+                <NumberPicker
+                        android:id="@+id/db_leaves_picker"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintRight_toRightOf="@id/db_leaves_tv"
+                        app:layout_constraintLeft_toLeftOf="@id/db_leaves_tv"
+                        app:layout_constraintTop_toBottomOf="@id/db_leaves_tv"
+                />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </HorizontalScrollView>
 
     <Button
             android:backgroundTint="#888888"
@@ -138,10 +142,24 @@
             android:layout_marginRight="5dp"
             android:onClick="dismissCloudActivity"/>
 
+    <DatePicker
+            android:id="@+id/date_picker"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/horizontal_picker_layout_db"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/dismiss_new_seed_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+    />
+
     <Button
             android:backgroundTint="#888888"
             android:id="@+id/save_new_seed_button"
-            android:text="save"
+            android:text="SEND"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Looper;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.greenhouse.settings.Settings;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,15 +30,15 @@ public class HttpRestConnection extends AsyncTask<String, Integer, String> {
     private URL url;
     private HttpURLConnection httpURLConnection;
 
-    public HttpRestConnection(String IP, TextView db_state, Context context, String putParameter) {
+    public HttpRestConnection(TextView db_state, Context context, String putParameter) {
         try {
             this.db_state = db_state;
 
-            this.url = new URL("http://" + IP + ":80/Put.php?" + putParameter);
+            this.url = new URL("http://" + Settings.IP + ":" + Settings.port + "/Put.php?" + putParameter);
             this.db_state.setText("URL correct");
 
             this.httpURLConnection = (HttpURLConnection) this.url.openConnection();
-            this.db_state.setText("Connected");
+            this.db_state.setText("Connecting...");
 
         } catch (MalformedURLException e) {
            db_state.setText("Malformed URL error");

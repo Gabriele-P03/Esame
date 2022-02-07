@@ -32,6 +32,7 @@ public class Settings {
 
     private static File file;
     public static String IP = "", port = "", username = "", password = "";
+    public static boolean rememberLogin;
 
     public static void loadConf(Context context) throws IOException {
         file = new File(context.getFilesDir(), "conf.json");
@@ -43,14 +44,11 @@ public class Settings {
             JSONObject mainObj = jsonReader.getMainObject();
             if(mainObj != null) {
                 ArrayList<JSONMap> maps = mainObj.getMaps();
-                if (maps.size() == 4) {
-                    IP = maps.get(0).getValue();
-                    port = maps.get(1).getValue();
-                    username = maps.get(2).getValue();
-                    password = maps.get(3).getValue();
-                } else {
-                    throw new RuntimeException("Error configuration file composition...");
-                }
+                IP = (maps.size() >= 1 ? maps.get(0).getValue() : "127.0.0.1");
+                port = (maps.size() >= 2 ? maps.get(1).getValue() : "80");
+                username = (maps.size() >= 3 ? maps.get(2).getValue() : "root");
+                password = (maps.size() >= 4 ? maps.get(3).getValue() : "root");
+                rememberLogin = (maps.size() >= 5 ? maps.get(4).getValue().equals("true") : false);
             }
         }
     }
@@ -101,6 +99,7 @@ public class Settings {
         mainObj.addMap(new JSONMap("port", port));
         mainObj.addMap(new JSONMap("username", username));
         mainObj.addMap(new JSONMap("password", EncryptFunc.encrypt(password)));
+        mainObj.addMap(new JSONMap("rememberLogin", String.valueOf(rememberLogin)));
         jsonWriter.write(mainObj);
 
         jsonWriter.close();

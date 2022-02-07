@@ -1,16 +1,22 @@
 <?php
 
+    //require_once dirname(__FILE__)."/Decrypt.php";
+    //$PASSWORD = decrypt("CQ");
+    //echo $PASSWORD;
+
     /**
      * This is the Restful PHP API for sending DATA to MySQL DB
      * 
      * @author Gabriele-P03
     */
 
-    //As the database will be in local, we can decleare username and password right now
-    $USERNAME = "root";
-    $PASSWORD = "root";
+    
+    
+    $USERNAME = $_GET["usr"];
+    $PASSWORD = $_GET["psw"];
     $HOST = "localhost";
-    $PORT = 3306; //Php demands 3006 as port for MySQL, that is already set by SQLServer. In fact it will should not use it  
+    $PORT = 3306;
+
     $DB_NAME = "GH"; //Name of the databse
 
     $connection = mysqli_connect($HOST, $USERNAME, $PASSWORD, $DB_NAME);
@@ -29,6 +35,8 @@
 
         According to protocol: 0 means inside one, 1 outside one
     */
+
+    
     $TYPE_GH = $_GET["type_gh"];
     $DATE = $_GET["date"];
     $LEAVES = $_GET["leaves"];
@@ -53,24 +61,16 @@
         ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL, $Temperatura_COL, $Umidita_COL) 
         VALUES($DATE, $PLANTS, $LEAVES, $MAX_HEIGHT, $TEMPERATURE, $HUMIDTY)";
     }else if($TYPE_GH == "i"){
-        $query = "INSERT INTO Conta_serra ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL) VALUES($DATE, $PLANTS, $LEAVES, $MAX_HEIGHT)";
+        $query = "INSERT INTO Conta_serra ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL) VALUES('$DATE', $PLANTS, $LEAVES, $MAX_HEIGHT)";
     }
 
-    //Debugging purpose
-    //echo $query;
-
     if(!mysqli_query($connection, $query)){
-        echo("Error ".mysqli_errno($connection));
+        echo mysqli_errno($connection);
     }else{
         echo http_response_code();
     }
 
     mysqli_close($connection);
-    x();
-?>
 
-<?php
-    function x(){
-        
-    }
+    
 ?>

@@ -72,11 +72,6 @@ public class MainActivity extends AppCompatActivity {
         this.seedUpdateButton = findViewById(R.id.update_seed_button);
 
         SEED = Seed.readSeedFromFile(this.getApplicationContext());
-        try {
-            Settings.loadConf(this.getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
