@@ -49,6 +49,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
             Settings.saveConf(this.getApplicationContext(), this.ip.getText().toString(), this.port.getText().toString(), this.usr.getText().toString(), this.psw.getText().toString());
+            this.dismissActivitySettings(this.getCurrentFocus());
         } catch (IOException e) {
             e.printStackTrace();
         }

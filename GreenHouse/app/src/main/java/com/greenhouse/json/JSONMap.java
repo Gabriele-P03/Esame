@@ -38,7 +38,12 @@ public class JSONMap {
      */
     private String separate(String value){
         int index = value.indexOf(",");
-        return index > 0 ? value.substring(0, index) : value;
+        if(index == 0)
+            return "";
+        else if(index == -1)
+            return value;
+        else
+            return value.substring(0, index);
     }
 
     @Override

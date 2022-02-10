@@ -86,6 +86,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Called when user press Logout button
+     * It redirects user to the login layout
+     *
+     * @param v
+     */
+    public void logout(View v){
+        Settings.rememberLogin = false;
+        startActivity(new Intent(this.getApplicationContext(), LoginActivity.class));
+    }
+
+    /**
      * Called once user presses cloud button
      * @param v
      */
@@ -146,6 +157,6 @@ public class MainActivity extends AppCompatActivity {
      * @param v
      */
     public void openSettingsActivity(View v){
-        startActivity(new Intent(this.getApplicationContext(), SettingsActivity.class));
+        startActivity(new Intent(this.getApplicationContext(), SettingsActivity.class).putExtra("login", false));
     }
 }

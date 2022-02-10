@@ -186,16 +186,32 @@
             app:layout_constraintLeft_toRightOf="@id/cloud_button"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <!-- -->
+    <!-- Settings Button -->
     <ImageButton
             android:background="@android:color/transparent"
             android:src="@mipmap/settings"
             android:id="@+id/settings_bt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/temperature_progress_bar"
-            app:layout_constraintLeft_toLeftOf="@id/temperature_progress_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
             android:onClick="openSettingsActivity"
+    />
+
+    <!-- Log-Out Button -->
+    <ImageButton
+            android:background="@android:color/transparent"
+            android:src="@mipmap/logout"
+            android:id="@+id/log_out_bt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:onClick="logout"
     />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

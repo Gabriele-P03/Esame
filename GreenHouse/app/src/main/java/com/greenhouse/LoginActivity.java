@@ -47,13 +47,7 @@ public class LoginActivity extends Activity {
             e.printStackTrace();
         }
 
-        //If previously user didn't chose to remember credentials, it will load activity's views and then show it
-        //It doesn't mean that user will never be able to modify own credentials, in fact it can do it via Settings Button
-        //from MainActivity's layout
-        if(!Settings.rememberLogin)
-            this.loadCompos();
-        else
-            new LoginRequest(this.getApplicationContext()).execute(Settings.username, Settings.password);
+        this.loadCompos();
     }
 
     /**
@@ -61,10 +55,17 @@ public class LoginActivity extends Activity {
      */
     private void loadCompos(){
         this.usr = findViewById(R.id.login_usr);
+        if(Settings.username != null && Settings.username.length() > 0){
+            this.usr.setText(Settings.username);
+        }
         this.psw = findViewById(R.id.login_psw);
+        if(Settings.password != null && Settings.password.length() > 0){
+            this.psw.setText(Settings.password);
+        }
         this.settingsBT = findViewById(R.id.settings_login_button);
         this.loginBT = findViewById(R.id.login_button);
         this.rememberLoginCB = findViewById(R.id.remember_login);
+        this.rememberLoginCB.setChecked(Settings.rememberLogin);
 
         this.settingsBT.setOnClickListener(l -> {
             Intent i = new Intent(this.getApplicationContext(), SettingsActivity.class);
@@ -80,7 +81,7 @@ public class LoginActivity extends Activity {
 
         this.loginBT.setOnClickListener(l -> {
             Settings.rememberLogin = this.rememberLoginCB.isChecked();
-            new LoginRequest(this.getApplicationContext()).execute(Settings.username, Settings.password);
+            new LoginRequest(this.getApplicationContext()).execute(this.usr.getText().toString(), this.psw.getText().toString());
         });
     }
 }

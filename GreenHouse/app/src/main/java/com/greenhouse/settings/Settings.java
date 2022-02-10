@@ -80,13 +80,6 @@ public class Settings {
             return;
         }
 
-        //Checking username
-        if(username.length() <= 0)
-            return;
-
-        //Checking password
-        if(password.length() <= 1)
-            return;
 
         file = new File(context.getFilesDir(), "conf.json");
         if(!file.exists()){
@@ -97,11 +90,15 @@ public class Settings {
         JSONObject mainObj = new JSONObject("");
         mainObj.addMap(new JSONMap("ip", IP));
         mainObj.addMap(new JSONMap("port", port));
-        mainObj.addMap(new JSONMap("username", username));
-        mainObj.addMap(new JSONMap("password", EncryptFunc.encrypt(password)));
+        mainObj.addMap(new JSONMap("username", (rememberLogin ? username : "")));
+        mainObj.addMap(new JSONMap("password", (rememberLogin ? EncryptFunc.encrypt(password) : "")));
         mainObj.addMap(new JSONMap("rememberLogin", String.valueOf(rememberLogin)));
         jsonWriter.write(mainObj);
 
         jsonWriter.close();
+    }
+
+    public static void saveConf(Context context) throws IOException {
+        saveConf(context, IP, port, username, password);
     }
 }
