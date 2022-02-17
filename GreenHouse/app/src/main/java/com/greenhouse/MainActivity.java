@@ -25,6 +25,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import com.greenhouse.blt.BluetoothActivity;
 import com.greenhouse.cloud.DataBaseActivity;
 import com.greenhouse.settings.Settings;
@@ -48,11 +50,12 @@ public class MainActivity extends AppCompatActivity {
      */
     public static TextView[] textViews = new TextView[3];
 
-    private TextView valuesTV;
+    private TextView valuesTV, welcomeBackTV;
     private ImageButton bltButton, seedUpdateButton;
 
     private static Seed SEED;
 
+    private FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
         this.seedUpdateButton = findViewById(R.id.update_seed_button);
 
         SEED = Seed.readSeedFromFile(this.getApplicationContext());
+
+        this.welcomeBackTV = findViewById(R.id.welcome_back_msg);
+        this.welcomeBackTV.setText("Welcome Back\n" + Settings.username);
+
+        this.fragmentManager = this.getSupportFragmentManager();
     }
 
     /**

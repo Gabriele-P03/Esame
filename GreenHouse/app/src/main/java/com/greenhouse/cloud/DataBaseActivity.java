@@ -28,7 +28,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.fragment.app.FragmentManager;
+import com.greenhouse.MainActivity;
 import com.greenhouse.R;
+import com.greenhouse.SeedActivity;
 import com.greenhouse.cloud.HttpRest.HttpRestConnection;
 import com.greenhouse.settings.Settings;
 
@@ -47,6 +50,8 @@ public class DataBaseActivity extends AppCompatActivity {
     private TextView[] tvs;
     private DatePicker datePicker;
 
+    private FragmentManager fragmentManager;
+
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,9 @@ public class DataBaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_data_base);
 
         this.loadComponents();
+
+        this.fragmentManager = this.getSupportFragmentManager();
+        //this.fragmentManager.beginTransaction().replace(R.id.db_layout, ).commit();
     }
 
 

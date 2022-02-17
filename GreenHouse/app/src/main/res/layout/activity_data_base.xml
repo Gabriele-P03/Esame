@@ -9,7 +9,6 @@
         android:layout_height="match_parent"
         tools:context=".cloud.DataBaseActivity">
 
-
     <!-- Info about db connection-->
     <TextView
             android:id="@+id/db_state_tv"
@@ -165,4 +164,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             android:onClick="sendData"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

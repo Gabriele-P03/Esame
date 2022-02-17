@@ -39,4 +39,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly 'com.google.android.wearable:wearable:2.6.0'
+    compile 'com.github.AnyChart:AnyChart-Android:0.0.3'
 }

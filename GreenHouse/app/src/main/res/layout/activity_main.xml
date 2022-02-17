@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main_lay"
         android:orientation="vertical"
         android:background="@drawable/background"
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -24,7 +25,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/humidity_progress_bar"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
     />
@@ -63,7 +64,7 @@
             app:layout_constraintTop_toBottomOf="@id/temperature_progress_bar"
             app:layout_constraintRight_toLeftOf="@id/light_progress_bar"
             app:layout_constraintBottom_toTopOf="@id/values_tv"
-            android:layout_marginTop="20dp"
+
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"/>
@@ -102,7 +103,6 @@
             app:layout_constraintLeft_toRightOf="@id/humidity_progress_bar"
             app:layout_constraintTop_toBottomOf="@id/temperature_progress_bar"
             app:layout_constraintBottom_toTopOf="@id/values_tv"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"/>
@@ -198,6 +198,22 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:onClick="openSettingsActivity"
+    />
+
+    <!-- Welcome back msg-->
+    <TextView
+            android:fontFamily="cursive"
+            android:textSize="30dp"
+            android:id="@+id/welcome_back_msg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/settings_bt"
+            app:layout_constraintRight_toLeftOf="@id/log_out_bt"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+
     />
 
     <!-- Log-Out Button -->

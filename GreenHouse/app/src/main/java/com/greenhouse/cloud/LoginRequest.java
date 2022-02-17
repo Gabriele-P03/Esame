@@ -61,14 +61,12 @@ public class LoginRequest extends AsyncTask<String, String, String> {
                 return result;
             }
 
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            this.publishProgress(e.getMessage());
         } catch (IOException e) {
             e.printStackTrace();
+            this.publishProgress(e.getMessage());
+            return "-2";
         }
 
-        return "-1";
     }
 
     @Override
@@ -96,7 +94,7 @@ public class LoginRequest extends AsyncTask<String, String, String> {
                 e.printStackTrace();
             }
         }else if(s.equals("-2")){
-            Toast.makeText(context, "Server" + Settings.IP + ":" + Settings.port + "unreachable", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Server " + Settings.IP + ":" + Settings.port + " unreachable", Toast.LENGTH_SHORT).show();
         }
     }
 }
