@@ -24,18 +24,20 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
  * @author Gabriele-P03
  */
 
-public class LoginRequest extends AsyncTask<String, String, String> {
+public class LoginRequest extends AsyncTask<String, String, Integer> {
 
     private URL url;
     private HttpURLConnection httpURLConnection;
     private Context context;
+
+    private String result;
 
     public LoginRequest(Context context){
         this.context = context;
     }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected Integer doInBackground(String... strings) {
         try {
 
             this.url = new URL("http://" + Settings.IP + ":" + Settings.port + "/Login.php?usr=" +
@@ -43,28 +45,27 @@ public class LoginRequest extends AsyncTask<String, String, String> {
                     "&psw=" + strings[1]);
             this.httpURLConnection = (HttpURLConnection) this.url.openConnection();
 
+            int statusCode = this.httpURLConnection.getResponseCode();
+
             //Wait the response from RESTFul Server for checking if credentials are valid
             InputStream is = this.httpURLConnection.getInputStream();
             byte[] bytes = new byte[256];
             is.read(bytes);
-            String result = new String(bytes, StandardCharsets.UTF_8);
+            this.result = new String(bytes, StandardCharsets.UTF_8);
 
             //200 in HTTP means all ok, then it is gonna starting MainActivity after have saved new credentials
-            if(result.trim().equals("200")) {
+            if(statusCode == 200) {
                 Settings.username = strings[0];
                 Settings.password = strings[1];
 
                 Settings.saveConf(this.context);
-
-                return "200";
-            }else{
-                return result;
             }
+            return statusCode;
 
         } catch (IOException e) {
             e.printStackTrace();
             this.publishProgress(e.getMessage());
-            return "-2";
+            return -2;
         }
 
     }
@@ -74,12 +75,22 @@ public class LoginRequest extends AsyncTask<String, String, String> {
         Toast.makeText(context, values[0], Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Called once that Login process is over.
+     * Once response message has been received, it starts the {@link MainActivity} after have added, in according to documentation,
+     * FLAG_ACTIVITY_NEW_TASK 'cause it is gonna be started by an Async-Task.
+     * Otherwise, in case of error, if credentials are not valid and they've been saved, they will be deleted, instead for
+     * any other errors, status code will be printed
+     * @param statusCode
+     */
     @Override
-    protected void onPostExecute(String s) {
-        s = s.trim();
-        if(s.equals("200"))
-            context.startActivity(new Intent(context, MainActivity.class).addFlags(FLAG_ACTIVITY_NEW_TASK));
-        else if (s.equals("-1")){
+    protected void onPostExecute(Integer statusCode) {
+
+        if(statusCode.intValue() == 200)
+            context.startActivity(new Intent(context, MainActivity.class)
+                    .addFlags(FLAG_ACTIVITY_NEW_TASK)
+                    .putExtra("grade", this.result));
+        else if (statusCode.intValue() == 401){
             /*
                 RESTFul Server returns -1 if username or password are invalid
                 It reset username and password
@@ -93,8 +104,8 @@ public class LoginRequest extends AsyncTask<String, String, String> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else if(s.equals("-2")){
-            //Toast.makeText(context, "Server " + Settings.IP + ":" + Settings.port + " unreachable", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(context, Settings.IP + ":" + Settings.port + " response status code: " + statusCode.intValue() + " - " + this.result, Toast.LENGTH_LONG).show();
         }
     }
 }

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/background"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Account -->
+    <ImageView
+            android:id="@+id/account_menu_img_button"
+            android:src="@mipmap/account"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+    <Button
+            android:background="@android:color/transparent"
+            android:text="ACCOUNT"
+            android:id="@+id/account_menu_button"
+            android:layout_height="0dp"
+            android:layout_width="0dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/account_menu_img_button"
+            app:layout_constraintBottom_toBottomOf="@id/account_menu_img_button"
+            app:layout_constraintTop_toTopOf="@id/account_menu_img_button"/>
+
+
+    <!-- SETTINGS -->
+    <ImageView
+            android:id="@+id/settings_menu_img_button"
+            android:src="@mipmap/settings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/account_menu_img_button"
+            app:layout_constraintTop_toBottomOf="@id/account_menu_img_button"/>
+    <Button
+            android:background="@android:color/transparent"
+            android:text="SETTINGS"
+            android:id="@+id/settings_menu_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toRightOf="@id/account_menu_img_button"
+            app:layout_constraintBottom_toBottomOf="@id/settings_menu_img_button"
+            app:layout_constraintTop_toTopOf="@id/settings_menu_img_button"/>
+
+    <!-- BLUETOOTH -->
+    <ImageView
+            android:id="@+id/blt_menu_img_button"
+            android:src="@mipmap/blt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/settings_menu_img_button"
+            app:layout_constraintTop_toBottomOf="@id/settings_menu_img_button"/>
+    <Button
+            android:background="@android:color/transparent"
+            android:text="BLUETOOTH"
+            android:id="@+id/blt_menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toRightOf="@id/account_menu_img_button"
+            app:layout_constraintBottom_toBottomOf="@id/blt_menu_img_button"
+            app:layout_constraintTop_toTopOf="@id/blt_menu_img_button"/>
+
+    <!-- SEED -->
+    <ImageView
+            android:id="@+id/seed_menu_img_button"
+            android:src="@mipmap/seed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@id/seed_menu_button"
+            app:layout_constraintLeft_toLeftOf="@id/blt_menu_img_button"
+            app:layout_constraintTop_toBottomOf="@id/blt_menu_img_button"/>
+    <Button
+            android:background="@android:color/transparent"
+            android:text="SEED"
+            android:id="@+id/seed_menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toRightOf="@id/blt_menu_img_button"
+            app:layout_constraintBottom_toBottomOf="@id/seed_menu_img_button"
+            app:layout_constraintTop_toTopOf="@id/seed_menu_img_button"/>
+
+    <!-- LOG-OUT -->
+    <ImageView
+            android:id="@+id/logout_menu_img_button"
+            android:src="@mipmap/logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="@id/blt_menu_img_button"
+            app:layout_constraintTop_toBottomOf="@id/seed_menu_img_button"/>
+    <Button
+            android:background="@android:color/transparent"
+            android:text="LOG-OUT"
+            android:id="@+id/logout_menu_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toRightOf="@id/logout_menu_img_button"
+            app:layout_constraintBottom_toBottomOf="@id/logout_menu_img_button"
+            app:layout_constraintTop_toTopOf="@id/logout_menu_img_button"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

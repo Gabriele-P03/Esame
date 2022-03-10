@@ -1,4 +1,6 @@
+
 <?php
+
 
     $usr = $_GET["usr"];
     $psw = $_GET["psw"];
@@ -16,9 +18,12 @@
     $COGNOME = "Cognome";
 
     $connection = mysqli_connect($HOST, "user", "user", $DB_NAME);
+
     if(mysqli_connect_errno()){
+
         echo ("Failed to connect: ".mysqli_connect_error());
         die();
+
     }else{
         //No errors occurred while connecting to the server
         $QUERY = "SELECT * FROM Impiegato WHERE $USERNAME = '$usr' AND $PASSWORD = '$psw'";
@@ -36,13 +41,16 @@
             if($row){
                 //Username and password valid
                 //Let's pass employee's grade
-                echo "200";
+                header("HTTP/1.0 200 OK");
+                echo $row['Grado'];
             }else{
-                //Invalid useername or password
-                echo "-1";
+                //Invalid username or password
+                //401 status code means Unuthorized, it must be seen as invalid credentials
+                header("HTTP/1.0 401 UNUTHORIZED");
             }
         }else{
-            
+            header("HTTP/1.0 500 INTERNAL_SERVER_ERROR");
         }
+        
     }
 ?>

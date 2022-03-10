@@ -18,11 +18,11 @@
 package com.greenhouse;
 
 import android.content.Intent;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.ViewGroup;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -33,6 +33,8 @@ import com.greenhouse.settings.Settings;
 import com.greenhouse.settings.SettingsActivity;
 
 import java.io.IOException;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,47 +72,33 @@ public class MainActivity extends AppCompatActivity {
         this.textViews[1] = findViewById(R.id.humidity_tv);
         this.textViews[2] = findViewById(R.id.light_tv);
 
-        this.valuesTV = findViewById(R.id.values_tv);
-        this.bltButton = findViewById(R.id.blt_button);
-        this.seedUpdateButton = findViewById(R.id.update_seed_button);
+        //this.valuesTV = findViewById(R.id.values_tv);
+        //this.bltButton = findViewById(R.id.blt_button);
+        //this.seedUpdateButton = findViewById(R.id.update_seed_button);
 
         SEED = Seed.readSeedFromFile(this.getApplicationContext());
-
-        this.welcomeBackTV = findViewById(R.id.welcome_back_msg);
-        this.welcomeBackTV.setText("Welcome Back\n" + Settings.username);
-
-        this.fragmentManager = this.getSupportFragmentManager();
     }
 
     /**
      * Called once user presses bluetooth button.
      * Open paired bluetooth device available popup window.
      * Socket will connect to the clicked one.
-     *
-     * @param v
      */
-    public void bltButtonOnClick(View v){
-        startActivity(new Intent(this.getApplicationContext(), BluetoothActivity.class));
-    }
+    private void openBluetoothActivity(){ startActivity(new Intent(this.getApplicationContext(), BluetoothActivity.class)); }
 
     /**
      * Called when user press Logout button
      * It redirects user to the login layout
-     *
-     * @param v
      */
-    public void logout(View v){
+    private void logout(){
         Settings.rememberLogin = false;
         startActivity(new Intent(this.getApplicationContext(), LoginActivity.class));
     }
 
     /**
      * Called once user presses cloud button
-     * @param v
      */
-    public void cloudButtonOnClick(View v){
-        startActivity(new Intent(this.getApplicationContext(), DataBaseActivity.class));
-    }
+    private void openCloudActivity(){ startActivity(new Intent(this.getApplicationContext(), DataBaseActivity.class)); }
 
     /**
      * Called once user presses seed update button.
@@ -119,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
      *
      * @param v
      */
-    public void seedUpdateButton(View v) {
+    private void seedUpdateButton(View v) {
         if (BluetoothActivity.bltSocket != null && BluetoothActivity.bltSocket.isBltConnected()) {
                 BluetoothActivity.bltSocket.updateSeed(this.valuesTV.getText().toString(), this.getApplicationContext());
         }else{
@@ -131,40 +119,53 @@ public class MainActivity extends AppCompatActivity {
      * Called when user presses on current values text view (even if it is not a button).
      * It will open a popup window which let user inserts new values.
      * Every time a new seed is set, its values will be saved in a text file
+     */
+    private void openSeedActivity(){ startActivity(new Intent(this.getApplicationContext(), SeedActivity.class)); }
+
+    /**
+     * Called when user presses Settings button
+     */
+    private void openSettingsActivity(){
+        startActivity(new Intent(this.getApplicationContext(), SettingsActivity.class).putExtra("login", false));
+    }
+
+    /**
+     * Called when user press on Menu Button
+     * It inflates the popup menu
      * @param v
      */
-    public void valuesTVPressed(View v){
-        startActivity(new Intent(this.getApplicationContext(), SeedActivity.class));
+    public void inflateMenu(View v){
+        LayoutInflater li = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View view = li.inflate(R.layout.menu_pupup, null);
+
+        if(view != null) {
+
+            //Account Menu Button: show account information
+            view.findViewById(R.id.account_menu_button).setOnClickListener( l -> MainActivity.this.openAccountMask());
+            //Settings Menu Button: starts settings activity
+            view.findViewById(R.id.settings_menu_button).setOnClickListener( l -> MainActivity.this.openSettingsActivity());
+            //Bluetooth Menu Button: starts blt activity
+            view.findViewById(R.id.blt_menu_button).setOnClickListener( l -> MainActivity.this.openBluetoothActivity());
+            //Seed Menu Button: starts seed activity
+            view.findViewById(R.id.seed_menu_button).setOnClickListener( l -> MainActivity.this.openSeedActivity());
+            //Logout Menu Button: logout from account
+            view.findViewById(R.id.logout_menu_button).setOnClickListener( l -> MainActivity.this.logout());
+
+            PopupWindow popupWindow = new PopupWindow(view, WRAP_CONTENT, WRAP_CONTENT, true);
+            View viewDivider = findViewById(R.id.divider);
+            popupWindow.showAsDropDown(viewDivider, 0, 0);
+        }
+
+
+    }
+
+    /**
+     * Called when user press Account Button
+     */
+    private void openAccountMask() {
     }
 
     public static Seed getSEED() {
         return SEED;
-    }
-
-
-    /**
-     * Called when this activity is resumed, it reloads seed's values
-     */
-    @Override
-    protected void onResume() {
-
-        super.onResume();
-        if (SEED != null) {
-            this.valuesTV.setText(
-                    "Temperature: " + SEED.getMinTemp() + " - " + SEED.getMaxTemp() + "\n" +
-                    "Humidity: " + SEED.getMinHum() + " - " + SEED.getMaxHum() + "\n" +
-                    "Light: " + SEED.getMinLight() + " - " + SEED.getMaxLight());
-        }else{
-            this.valuesTV.setText("Tap here to insert a new seed");
-        }
-    }
-
-
-    /**
-     * Called when user presses Settings button
-     * @param v
-     */
-    public void openSettingsActivity(View v){
-        startActivity(new Intent(this.getApplicationContext(), SettingsActivity.class).putExtra("login", false));
     }
 }
