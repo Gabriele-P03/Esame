@@ -5,6 +5,7 @@ import android.widget.NumberPicker;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.greenhouse.blt.BluetoothActivity;
 
 public class SeedActivity extends AppCompatActivity {
 
@@ -33,6 +34,8 @@ public class SeedActivity extends AppCompatActivity {
         this.pickers[3].setValue(MainActivity.getSEED().getMaxHum());
         this.pickers[4].setValue(MainActivity.getSEED().getMinLight());
         this.pickers[5].setValue(MainActivity.getSEED().getMaxLight());
+
+        Toast.makeText(this.getApplicationContext(), "Save new values before to send them", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -64,7 +67,18 @@ public class SeedActivity extends AppCompatActivity {
         }
     }
 
-    public void dismissNewSeed(View v){
-        this.finish();
+    /**
+     * Called once user presses seed update button.
+     * It will run a little daemon function which sends to HC-05 new
+     * min and max values about temp, humidity and light.
+     *
+     * @param v
+     */
+    public void updateRemoteSeed(View v){
+        if (BluetoothActivity.bltSocket != null && BluetoothActivity.bltSocket.isBltConnected()) {
+            BluetoothActivity.bltSocket.updateSeed(MainActivity.getSEED().getSeedValuesAsArray(), this.getApplicationContext());
+        }else{
+            Toast.makeText(this.getApplicationContext(), "No bluetooth device connected...", Toast.LENGTH_SHORT).show();
+        }
     }
 }

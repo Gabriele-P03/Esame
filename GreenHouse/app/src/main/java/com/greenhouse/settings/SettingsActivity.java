@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private EditText ip, port, usr, psw;
+    private EditText ip, port;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +24,6 @@ public class SettingsActivity extends AppCompatActivity {
         this.ip.setText(Settings.IP);
         this.port = findViewById(R.id.settings_port);
         this.port.setText(Settings.port);
-        this.usr = findViewById(R.id.settings_usr);
-        this.usr.setText(Settings.username);
-        this.psw = findViewById(R.id.settings_psw);
-        this.psw.setText(Settings.password);
     }
 
 
@@ -37,18 +33,9 @@ public class SettingsActivity extends AppCompatActivity {
      */
     public void saveSettings(View v){
         try {
-            String buffer = this.psw.getText().toString();
-            for(int i = 0; i < buffer.length(); i++){
-                for(int j = 0; j < buffer.length(); j++){
-                    if(i != j){
-                        if(buffer.charAt(i) == buffer.charAt(j)) {
-                            Toast.makeText(this.getApplicationContext(), "Password cannot have characters repeated", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                    }
-                }
-            }
-            Settings.saveConf(this.getApplicationContext(), this.ip.getText().toString(), this.port.getText().toString(), this.usr.getText().toString(), this.psw.getText().toString());
+            Settings.IP = this.ip.getText().toString();
+            Settings.port = this.port.getText().toString();
+            Settings.saveConf(this.getApplicationContext());
             this.dismissActivitySettings(this.getCurrentFocus());
         } catch (IOException e) {
             e.printStackTrace();

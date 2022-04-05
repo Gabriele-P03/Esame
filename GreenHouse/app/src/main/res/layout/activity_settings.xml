@@ -60,58 +60,7 @@
             app:layout_constraintLeft_toRightOf="@id/settings_port_tv"
     />
 
-    <!-- Username -->
-    <TextView
-            android:id="@+id/settings_usr_tv"
-            android:text="Username:"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/settings_port_tv"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="10dp"
-    />
-    <EditText
-            android:id="@+id/settings_usr"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            app:layout_constraintBottom_toBottomOf="@id/settings_usr_tv"
-            app:layout_constraintLeft_toRightOf="@id/settings_usr_tv"
-    />
 
-    <!-- Password -->
-    <TextView
-            android:id="@+id/settings_psw_tv"
-            android:text="Password:"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/settings_usr_tv"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="10dp"
-    />
-    <EditText
-            android:inputType="textPassword"
-            android:id="@+id/settings_psw"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            app:layout_constraintBottom_toBottomOf="@id/settings_psw_tv"
-            app:layout_constraintLeft_toRightOf="@id/settings_psw_tv"
-    />
 
     <Button
             android:id="@+id/dismiss_settings_bt"

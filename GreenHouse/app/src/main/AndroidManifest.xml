@@ -19,6 +19,8 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.GreenHouse"
             android:usesCleartextTraffic="true">
+        <activity android:name=".cloud.jobs.GetActivity">
+        </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -29,7 +31,7 @@
         <activity android:name=".settings.SettingsActivity">
         </activity>
         <activity
-                android:name=".cloud.DataBaseActivity"
+                android:name=".cloud.jobs.employee.PutActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
         </activity>
         <activity
@@ -44,6 +46,9 @@
                 android:name=".blt.BluetoothActivity"
                 android:theme="@style/Theme.GreenHouse.NoActionBar">
         </activity>
+        <activity
+                android:name=".cloud.jobs.TaskActivity"
+                android:theme="@style/Theme.GreenHouse.NoActionBar"/>
 
         <service android:name=".blt.BLTSocket">
         </service>

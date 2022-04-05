@@ -16,11 +16,10 @@
  * Otherwise, it will be done on send button click
  */
 
-package com.greenhouse.cloud;
+package com.greenhouse.cloud.jobs.employee;
 
 import android.graphics.Color;
 import android.os.Build;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.RequiresApi;
@@ -28,22 +27,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.fragment.app.FragmentManager;
-import com.greenhouse.MainActivity;
 import com.greenhouse.R;
-import com.greenhouse.SeedActivity;
-import com.greenhouse.TestFragment;
-import com.greenhouse.cloud.HttpRest.HttpRestConnection;
+import com.greenhouse.cloud.jobs.employee.Put;
 import com.greenhouse.settings.Settings;
 
-import java.io.*;
-import java.time.LocalDate;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalField;
-import java.util.HashMap;
-import java.util.concurrent.ExecutionException;
-
-public class DataBaseActivity extends AppCompatActivity {
+public class PutActivity extends AppCompatActivity {
 
     private TextView DB_state;
     private Switch ghSwitch;
@@ -66,7 +54,7 @@ public class DataBaseActivity extends AppCompatActivity {
      * @param v
      */
     public void sendData(View v) {
-        new HttpRestConnection(this.DB_state, this.getApplicationContext(), this.getRequestParameter()).execute();
+        new Put(this.getApplicationContext()).execute(this.getRequestParameter());
     }
 
 
@@ -88,13 +76,12 @@ public class DataBaseActivity extends AppCompatActivity {
      */
     private String getRequestParameter(){
         String params =
-               "usr=" + Settings.username + "&"
-             + "psw=" + Settings.password + "&"
-             + "type_gh=" + (this.ghSwitch.isChecked() ? "o" : "i") + "&"
-             + "date=" + this.datePicker.getYear() + "-" + this.datePicker.getMonth()+1 + "-" + this.datePicker.getDayOfMonth() + "&"
-             + "max_height=" + this.pickers[0].getValue() + "&"
-             + "plants=" + this.pickers[1].getValue() + "&"
-             + "leaves=" + this.pickers[2].getValue();
+                "usr=" + Settings.username
+             + "&type_gh=" + (this.ghSwitch.isChecked() ? "o" : "i")
+             + "&date='" + this.datePicker.getYear() + "-" + (this.datePicker.getMonth()+1) + "-" + this.datePicker.getDayOfMonth()
+             + "'&max_height=" + this.pickers[0].getValue()
+             + "&plants=" + this.pickers[1].getValue()
+             + "&leaves=" + this.pickers[2].getValue();
 
         if(this.ghSwitch.isChecked()){
             params += "&temperature=" + this.pickers[3].getValue() + "&humidity=" + this.pickers[4].getValue();
@@ -103,6 +90,7 @@ public class DataBaseActivity extends AppCompatActivity {
         Toast.makeText(this.getApplicationContext(), params, Toast.LENGTH_LONG).show();
         return params;
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.Q)

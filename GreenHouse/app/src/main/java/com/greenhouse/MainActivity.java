@@ -11,28 +11,22 @@
  * For more info about arduino part, check gitHub:
  *
  * @author Gabriele-P03
- *
- *
  */
 
 package com.greenhouse;
 
 import android.content.Intent;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import com.greenhouse.blt.BluetoothActivity;
-import com.greenhouse.cloud.DataBaseActivity;
+import com.greenhouse.cloud.jobs.TaskActivity;
 import com.greenhouse.settings.Settings;
 import com.greenhouse.settings.SettingsActivity;
 
-import java.io.IOException;
+import java.util.Arrays;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -52,12 +46,9 @@ public class MainActivity extends AppCompatActivity {
      */
     public static TextView[] textViews = new TextView[3];
 
-    private TextView valuesTV, welcomeBackTV;
-    private ImageButton bltButton, seedUpdateButton;
-
     private static Seed SEED;
 
-    private FragmentManager fragmentManager;
+    private static GRADE grade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
         this.textViews[1] = findViewById(R.id.humidity_tv);
         this.textViews[2] = findViewById(R.id.light_tv);
 
-        //this.valuesTV = findViewById(R.id.values_tv);
-        //this.bltButton = findViewById(R.id.blt_button);
-        //this.seedUpdateButton = findViewById(R.id.update_seed_button);
-
         SEED = Seed.readSeedFromFile(this.getApplicationContext());
+
+        //Get the grade of the user
+        //Given by login query
+        this.grade = Arrays.stream(GRADE.values()).filter( grade -> grade.getIndex() == this.getIntent().getIntExtra("Grade", 0)).findFirst().get();
     }
 
     /**
@@ -98,22 +89,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * Called once user presses cloud button
      */
-    private void openCloudActivity(){ startActivity(new Intent(this.getApplicationContext(), DataBaseActivity.class)); }
-
-    /**
-     * Called once user presses seed update button.
-     * It will run a little daemon function which sends to HC-05 new
-     * min and max values about temp, humidity and light.
-     *
-     * @param v
-     */
-    private void seedUpdateButton(View v) {
-        if (BluetoothActivity.bltSocket != null && BluetoothActivity.bltSocket.isBltConnected()) {
-                BluetoothActivity.bltSocket.updateSeed(this.valuesTV.getText().toString(), this.getApplicationContext());
-        }else{
-            Toast.makeText(this.getApplicationContext(), "No bluetooth device connected...", Toast.LENGTH_SHORT).show();
-        }
+    private void openTaskPopup(){
+        startActivity(new Intent(this.getApplicationContext(), TaskActivity.class));
     }
+
 
     /**
      * Called when user presses on current values text view (even if it is not a button).
@@ -141,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         if(view != null) {
 
             //Account Menu Button: show account information
-            view.findViewById(R.id.account_menu_button).setOnClickListener( l -> MainActivity.this.openAccountMask());
+            view.findViewById(R.id.task_menu_button).setOnClickListener( l -> MainActivity.this.openTaskPopup());
             //Settings Menu Button: starts settings activity
             view.findViewById(R.id.settings_menu_button).setOnClickListener( l -> MainActivity.this.openSettingsActivity());
             //Bluetooth Menu Button: starts blt activity
@@ -155,17 +134,34 @@ public class MainActivity extends AppCompatActivity {
             View viewDivider = findViewById(R.id.divider);
             popupWindow.showAsDropDown(viewDivider, 0, 0);
         }
-
-
     }
 
-    /**
-     * Called when user press Account Button
-     */
-    private void openAccountMask() {
+    public static GRADE getGrade() {
+        if(grade == null)
+            throw new RuntimeException("Grade not available despite you're logged");
+
+        return grade;
     }
 
     public static Seed getSEED() {
         return SEED;
+    }
+
+    public enum GRADE{
+
+        CEO(3),
+        COO(2),
+        ANALYST(1),
+        EMPLOYEE(0);
+
+        int index;
+
+        GRADE(int index) {
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
     }
 }

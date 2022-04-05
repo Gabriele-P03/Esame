@@ -109,4 +109,8 @@ public class Seed {
         return new Seed();
     }
 
+    public int[] getSeedValuesAsArray(){
+        return new int[]{this.minTemp, this.maxTemp, this.minHum, this.maxHum, this.minLight, this.maxLight};
+    }
+
 }

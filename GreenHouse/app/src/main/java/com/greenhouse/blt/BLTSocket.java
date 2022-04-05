@@ -158,29 +158,21 @@ public class BLTSocket extends Service {
      *
      * Send to the HC-05 the new recommended values
      *
-     * @param string
+     * @param values
+     * @param context
      */
-    public void updateSeed(String string, Context context){
+    public void updateSeed(int values[], Context context){
 
         if(socket.isConnected()) {
 
-            //Remove names and split with regex '-'
-            String[] lines = string
-                    .replace("Temperature: ", "")
-                    .replace("Humidity: ", "")
-                    .replace("Light: ", "")
-                    .replace("\n", "-")
-                    .replace(" ", "")
-                    .split("-");
-
-            if (lines.length == 6) {
+            if (values.length == 6) {
                 try {
                     handler.removeCallbacks(runnable);
 
-                    for (String value : lines) {
+                    for (int value : values) {
                         byte[] bytes = new byte[2];
-                        bytes[0] = (byte) (Integer.parseInt(value) >> 8);
-                        bytes[1] = (byte) (Integer.parseInt(value) & 0xFF);
+                        bytes[0] = (byte) (value >> 8);
+                        bytes[1] = (byte) (value & 0xFF);
                         os.write(bytes);
                     }
                     os.flush();
@@ -192,7 +184,7 @@ public class BLTSocket extends Service {
                     handler.postDelayed(runnable, 2000);
                 }
             }else {
-                Toast.makeText(context, "Invalid values:\n" + string, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "Invalid values...", Toast.LENGTH_LONG).show();
             }
         }
     }

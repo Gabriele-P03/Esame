@@ -8,7 +8,7 @@
     <!-- Account -->
     <ImageView
             android:id="@+id/account_menu_img_button"
-            android:src="@mipmap/account"
+            android:src="@mipmap/cloud"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -17,8 +17,8 @@
             app:layout_constraintTop_toTopOf="parent"/>
     <Button
             android:background="@android:color/transparent"
-            android:text="ACCOUNT"
-            android:id="@+id/account_menu_button"
+            android:text="TASKS"
+            android:id="@+id/task_menu_button"
             android:layout_height="0dp"
             android:layout_width="0dp"
             app:layout_constraintRight_toRightOf="parent"

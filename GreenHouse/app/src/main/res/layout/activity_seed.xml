@@ -108,14 +108,14 @@
     <Button
             android:backgroundTint="#888888"
             android:id="@+id/dismiss_new_seed_button"
-            android:text="dismiss"
+            android:text="update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toLeftOf="@id/min_light_picker"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginRight="5dp"
-            android:onClick="dismissNewSeed"/>
+            android:onClick="updateRemoteSeed"/>
 
     <Button
             android:backgroundTint="#888888"
