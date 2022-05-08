@@ -22,6 +22,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.greenhouse.blt.BluetoothActivity;
+import com.greenhouse.cloud.jobs.GRADE;
 import com.greenhouse.cloud.jobs.TaskActivity;
 import com.greenhouse.settings.Settings;
 import com.greenhouse.settings.SettingsActivity;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static Seed SEED;
 
-    private static GRADE grade;
+    private GRADE grade;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
      * Called once user presses cloud button
      */
     private void openTaskPopup(){
-        startActivity(new Intent(this.getApplicationContext(), TaskActivity.class));
+        startActivity(new Intent(this.getApplicationContext(), TaskActivity.class).putExtra("grade", this.grade.getIndex()));
     }
 
 
@@ -136,32 +137,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static GRADE getGrade() {
-        if(grade == null)
-            throw new RuntimeException("Grade not available despite you're logged");
-
-        return grade;
-    }
-
     public static Seed getSEED() {
         return SEED;
-    }
-
-    public enum GRADE{
-
-        CEO(3),
-        COO(2),
-        ANALYST(1),
-        EMPLOYEE(0);
-
-        int index;
-
-        GRADE(int index) {
-            this.index = index;
-        }
-
-        public int getIndex() {
-            return index;
-        }
     }
 }

@@ -25,7 +25,7 @@
         die();
     }
     //Let's get the ID of the user who did the query
-    $query = "SELECT Id_impiegato FROM Impiegato WHERE Username = '$usr'";
+    $query = "SELECT * FROM Employee WHERE Username = '$usr'";
     $result = mysqli_query($connection, $query);
     $ID;
     if(!$result){
@@ -60,24 +60,26 @@
     $PLANTS = $_GET["plants"];
     $MAX_HEIGHT = $_GET["max_height"];
 
-    $Id_impiegato = "Id_impiegato";
-    $Fusti_COL = "Fusti";
-    $Foglie_COL = "Foglie";
-    $AltezzaMassima_COL = "Altezza_massima";
-    $Data_COL = "Data";
-    $Temperatura_COL = "Temperatura";
-    $Umidita_COL = "Umidita";
+    $Id_impiegato = "Id_employee";
+    $Fusti_COL = "Plants";
+    $Foglie_COL = "Leaves";
+    $AltezzaMassima_COL = "Max_height";
+    $Data_COL = "Date";
+    $Temperatura_COL = "Temperature";
+    $Umidita_COL = "Humidity";
+    $Light_COL = "Light";
 
     if($TYPE_GH == "o"){
         
         $TEMPERATURE = $_GET["temperature"];
         $HUMIDTY = $_GET["humidity"];
+        $LIGHT = $_GET['light'];
 
-        $query = "INSERT INTO Conta_esterno 
-        ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL, $Temperatura_COL, $Umidita_COL, $Id_impiegato) 
-        VALUES($DATE, $PLANTS, $LEAVES, $MAX_HEIGHT, $TEMPERATURE, $HUMIDTY, $ID)";
+        $query = "INSERT INTO Outside 
+        ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL, $Temperatura_COL, $Umidita_COL, $Light_COL, $Id_impiegato) 
+        VALUES($DATE, $PLANTS, $LEAVES, $MAX_HEIGHT, $TEMPERATURE, $HUMIDTY, $LIGHT, $ID)";
     }else if($TYPE_GH == "i"){
-        $query = "INSERT INTO Conta_serra ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL, $Id_impiegato) 
+        $query = "INSERT INTO Inside ($Data_COL, $Fusti_COL, $Foglie_COL, $AltezzaMassima_COL, $Id_impiegato) 
         VALUES($DATE, $PLANTS, $LEAVES, $MAX_HEIGHT, $ID)";
     }
 

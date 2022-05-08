@@ -8,9 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.greenhouse.MainActivity;
 import com.greenhouse.R;
 import com.greenhouse.cloud.jobs.employee.PutActivity;
+import static com.greenhouse.cloud.jobs.GRADE.ANALYST;
+import static com.greenhouse.cloud.jobs.GRADE.EMPLOYEE;
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -23,13 +24,13 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     private void loadComponents() {
-        switch (MainActivity.getGrade()){
+        switch (this.getIntent().getIntExtra("grade", 0)){
 
-            case EMPLOYEE:
+            case 0:
                 this.loadEmployeeTaskActivity();
             break;
 
-            case ANALYST:
+            case 1:
                 this.loadAnalystTaskActivity();
 
         }

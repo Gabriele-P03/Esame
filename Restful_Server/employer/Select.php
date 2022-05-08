@@ -29,12 +29,12 @@
     $bool_INSIDE = ($_GET["get_in"] == '1');
     $bool_OUTSIDE = ($_GET["get_out"] == '1');
 
-    $Fusti_COL = "Fusti";
-    $Foglie_COL = "Foglie";
-    $AltezzaMassima_COL = "Altezza_massima";
-    $Data_COL = "Data";
-    $Temperatura_COL = "Temperatura";
-    $Umidita_COL = "Umidita";
+    $Fusti_COL = "Plants";
+    $Foglie_COL = "Leaves";
+    $AltezzaMassima_COL = "Max_height";
+    $Data_COL = "Date";
+    $Temperatura_COL = "Temperature";
+    $Umidita_COL = "Humidity";
 
     $connection = mysqli_connect($HOST, $usr, $psw, $DB_NAME);
 
@@ -47,11 +47,11 @@
         $query = "SELECT * FROM ";
 
         if($bool_INSIDE && !$bool_OUTSIDE)
-            $query . "Conta_serra ";
+            $query . "Inside ";
         else if(!$bool_INSIDE && $bool_OUTSIDE)
-                $query . "Conta_esterno ";
+                $query . "Outisde ";
         else if($bool_INSIDE && $bool_OUTSIDE)
-            $query . "Conta_serra, Conta_esterno ";
+            $query . "Inside, Outisde ";
         else{
             echo "Any table to query on has been passed";
             header("HTTP/1.0 400 Missing input");

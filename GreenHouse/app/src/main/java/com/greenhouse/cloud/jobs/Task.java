@@ -72,7 +72,7 @@ public class Task extends AsyncTask<String, String, Integer> {
 
         //If no errors occurred, it doesn't matter to print any toast
         if(s.intValue() != 200)
-            Toast.makeText(this.context, this.result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.context, " " + s.intValue() + ": " + this.result, Toast.LENGTH_SHORT).show();
     }
 
     @Override
