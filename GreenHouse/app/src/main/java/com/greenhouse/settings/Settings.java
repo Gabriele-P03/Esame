@@ -6,8 +6,7 @@ import com.greenhouse.json.JSONObject;
 import com.greenhouse.json.JSONReader;
 import com.greenhouse.json.JSONWriter;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 /**
@@ -40,8 +39,8 @@ public class Settings {
             file.createNewFile();
             saveConf(context, IP, port, username, password);
         }else{
-            JSONReader jsonReader = new JSONReader(file);
-            JSONObject mainObj = jsonReader.getMainObject();
+            JSONReader jsonReader = new JSONReader(new BufferedReader(new FileReader(file)));
+            JSONObject mainObj = jsonReader.getRootObject();
             if(mainObj != null) {
                 ArrayList<JSONMap> maps = mainObj.getMaps();
                 IP = (maps.size() >= 1 ? maps.get(0).getValue() : "127.0.0.1");
@@ -86,16 +85,14 @@ public class Settings {
             file.createNewFile();
         }
 
-        JSONWriter jsonWriter = new JSONWriter(file);
-        JSONObject mainObj = new JSONObject("");
-        mainObj.addMap(new JSONMap("ip", IP));
-        mainObj.addMap(new JSONMap("port", port));
-        mainObj.addMap(new JSONMap("username", (rememberLogin ? username : "")));
-        mainObj.addMap(new JSONMap("password", (rememberLogin ? EncryptFunc.encrypt(password) : "")));
-        mainObj.addMap(new JSONMap("rememberLogin", String.valueOf(rememberLogin)));
-        jsonWriter.write(mainObj);
+        JSONObject mainObj = new JSONObject("", "");
+        mainObj.getMaps().add(new JSONMap("ip", IP));
+        mainObj.getMaps().add(new JSONMap("port", port));
+        mainObj.getMaps().add(new JSONMap("username", (rememberLogin ? username : "")));
+        mainObj.getMaps().add(new JSONMap("password", (rememberLogin ? EncryptFunc.encrypt(password) : "")));
+        mainObj.getMaps().add(new JSONMap("rememberLogin", String.valueOf(rememberLogin)));
 
-        jsonWriter.close();
+        new JSONWriter(mainObj, new FileOutputStream(file)).write();
     }
 
     public static void saveConf(Context context) throws IOException {

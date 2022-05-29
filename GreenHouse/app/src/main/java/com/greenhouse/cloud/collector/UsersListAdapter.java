@@ -46,7 +46,7 @@ public class UsersListAdapter extends BaseAdapter implements ListAdapter {
 
             User user = this.userCollector.getUSERS().get(position);
 
-            ((TextView)v.findViewById(R.id.list_users_id)).setText(user.getID_employee());
+            ((TextView)v.findViewById(R.id.list_users_id)).setText(String.valueOf(user.getID_employee()));
             ((TextView)v.findViewById(R.id.list_users_name)).setText(user.getFirst_name());
             ((TextView)v.findViewById(R.id.list_users_lastname)).setText(user.getLast_name());
             ((TextView)v.findViewById(R.id.list_users_username)).setText(user.getUsername());

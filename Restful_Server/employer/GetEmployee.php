@@ -23,7 +23,9 @@
         die();
 
     }else{
-        $query = "SELECT * FROM Employee";
+
+        //Only harvesters are enabled to insert data into DB, then it will select only harvesters' ones
+        $query = "SELECT Id,Name,LastName,Birthday,CF,Username,Grade,Id_employee FROM Employee WHERE Grade = 0";
 
         $result = mysqli_query($connection, $query);
 

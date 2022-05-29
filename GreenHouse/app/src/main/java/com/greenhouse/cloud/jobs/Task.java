@@ -43,7 +43,7 @@ public class Task extends AsyncTask<String, String, Integer> {
         try {
 
                 //For security reasons, before every query, even if the user is already authenticated, it must be done again
-                this.URL = new URL("http://" + Settings.IP + ":" + Settings.port + "/login.php?usr=" + Settings.username + "&psw=" + Settings.password);
+                this.URL = new URL("http://" + Settings.IP + ":" + Settings.port + "/login.php?usr=" + strings[0] + "&psw=" + strings[1]);
                 this.httpURLConnection = (HttpURLConnection) this.URL.openConnection();
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(this.httpURLConnection.getInputStream()));

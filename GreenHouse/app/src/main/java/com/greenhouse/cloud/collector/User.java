@@ -1,8 +1,9 @@
 package com.greenhouse.cloud.collector;
 
 import com.greenhouse.cloud.jobs.GRADE;
-import com.greenhouse.json.JSONMap;
 import com.greenhouse.json.JSONObject;
+
+import java.util.Arrays;
 
 /**
  * This is a simple abstraction of data about an employee
@@ -13,21 +14,34 @@ import com.greenhouse.json.JSONObject;
 public class User {
 
     private int ID_employee;
-    private String first_name, last_name, birthday, username, password, CF;
+    private String first_name, last_name, birthday, username, CF;
     private GRADE grade;
+    private int ID_fk_ceo;    //The CEO's id who hired this employee
 
-    public User(int ID_employee, String first_name, String last_name, String birthday, String username, String password, String CF) {
+    public User(int ID_employee, String first_name, String last_name, String birthday, String username,
+                String CF, GRADE grade, String ID_fk_ceo) {
         this.ID_employee = ID_employee;
         this.first_name = first_name;
         this.last_name = last_name;
         this.birthday = birthday;
         this.username = username;
-        this.password = password;
         this.CF = CF;
+        this.grade = grade;
+        try{
+            this.ID_fk_ceo = Integer.parseInt(ID_fk_ceo);
+        }catch (Exception e){}
     }
 
     public User(JSONObject object){
-
+        this(Integer.parseInt(object.getMaps().get(0).getValue()),
+                object.getMaps().get(1).getValue(),
+                object.getMaps().get(2).getValue(),
+                object.getMaps().get(3).getValue(),
+                object.getMaps().get(4).getValue(),
+                object.getMaps().get(5).getValue(),
+                Arrays.stream(GRADE.values()).filter( grade1 -> grade1.getIndex() == Integer.parseInt(object.getMaps().get(6).getValue())).findFirst().get(),
+                object.getMaps().get(7).getValue()
+                );
     }
 
     public int getID_employee() {
@@ -70,13 +84,6 @@ public class User {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getCF() {
         return CF;

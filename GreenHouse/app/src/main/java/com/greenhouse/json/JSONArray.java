@@ -2,149 +2,125 @@ package com.greenhouse.json;
 
 import java.util.ArrayList;
 
-/**
- * An array is represented by square brackets, they can contains values, arrays and objects;
- * these last two cannot be declared with a name.<br><br>
- * e.g.<br>
- * "array" : [<br>
- *  "valueString", 1, [anotherArray], {Object}<br>
- * ]
- */
-
 public class JSONArray {
 
-    //to a key name not available for objects/arrays declared inside themselves, it can be null
     private String name;
-    private int length = 0;
+    private ArrayList<JSONObject> objects;
+    private ArrayList<JSONArray> arrays;
+    private ArrayList<String> values;
 
-    private ArrayList<String> values = new ArrayList<>();
-    private ArrayList<JSONArray> arrays = new ArrayList<>();
-    private ArrayList<JSONObject> objects = new ArrayList<>();
-
-    public JSONArray(String arrayAsString){
-        this("", arrayAsString);
-    }
-
-    public JSONArray(String name, String arrayAsString) {
-
+    public JSONArray(String name, String jsonAsString) {
         this.name = name;
-        String tmp = "";
-
-        for(int index = 0; index < arrayAsString.length(); index++){
-
-            char c = arrayAsString.charAt(index);
-
-            //Length takes count of commas, brackets and colons, too
-            this.length++;
-
-            if(JSONReader.isValidChar(c)){
-                tmp += c;
-            }else {
-
-                if (c == ':') {
-
-                    String nextChar = this.getNextChar(arrayAsString, index);
-                    if(nextChar != "" && nextChar != null) {
-
-                        if (nextChar.equals("{")) {
-                            JSONObject object = new JSONObject(tmp, arrayAsString.substring(index+2));
-                            this.objects.add(object);
-                            this.length += object.getLength();
-                            index += object.getLength();
-                        } else if (nextChar.equals("[")) {
-                            JSONArray array = new JSONArray(tmp, arrayAsString.substring(index+2));
-                            this.arrays.add(array);
-                            this.length += array.getLength();
-                            index += array.getLength();
-                        } else if (nextChar.equals("]")) {
-                            break;
-                        } else if (nextChar.equals("}")) {
-                            continue;
-                        }else if(nextChar.equals(',')) {
-                            continue;
-                        }
-                    }
-                }else if(c == ',' || (tmp != "" && c == ']')){
-                    this.values.add(tmp);
-                }
-                tmp = "";
-            }
-
-            if(c == ']')
-                break;
-        }
+        this.objects = new ArrayList<>();
+        this.arrays = new ArrayList<>();
+        this.values = new ArrayList<>();
+        this.compute(jsonAsString);
     }
 
-    private String getNextChar(String string, int index){
-        return string.length() > index+1 ? String.valueOf(string.charAt(index+1)) : null;
+    public void setName(String name) {
+        this.name = name;
     }
 
-
-    public void addObject(String objectAsString){ this.objects.add(new JSONObject(objectAsString)); }
-    public void addArray(String arrayAsString){ this.arrays.add(new JSONArray(arrayAsString)); }
-    public void addValue(String value){this.values.add(value);}
-
-
-    public JSONObject[] getObjectByName(String name){ return this.objects.stream().filter(object -> object.getName().equals(name)).toArray(JSONObject[]::new); }
-    public JSONArray[] getArrayByName(String name){ return this.arrays.stream().filter(array -> array.getName().equals(name)).toArray(JSONArray[]::new); }
     public String getName() {
         return name;
     }
-    public ArrayList<String> getValues() {
-        return values;
-    }
-    public ArrayList<JSONArray> getArrays() {
-        return arrays;
-    }
+
     public ArrayList<JSONObject> getObjects() {
         return objects;
     }
 
-    public int getLength() {
-        return length;
+    public ArrayList<JSONArray> getArrays() {
+        return arrays;
+    }
+
+    public ArrayList<String> getValues() {
+        return values;
+    }
+
+    /**
+     * it computes the given json as string
+     * @param jsonAsString
+     */
+    private void compute(String jsonAsString){
+
+        String buffer = "";
+
+        for(int i = 0; i < jsonAsString.length(); i++){
+
+            if(i > 230){
+                buffer = buffer;
+            }
+
+            char charAtI = jsonAsString.charAt(i);
+
+            if(charAtI == ']'){
+                break;
+            }else if(charAtI == '}'){
+                throw new RuntimeException("Square bracket not expected");
+            }if(charAtI == '{') {
+                String subObjectAsString = jsonAsString.substring(i + 1);
+                int end = JSONParser.getIndexOfEndObject(subObjectAsString);
+                this.objects.add(new JSONObject("", subObjectAsString.substring(0, end)));
+                i += 1 + end;
+            }else if(charAtI == '['){
+                String subObjectAsString = jsonAsString.substring(i+1);
+                int end = JSONParser.getIndexOfEndArray(subObjectAsString);
+                this.arrays.add(new JSONArray("", subObjectAsString.substring(0, end)));
+                i += 1 + end;
+
+                //String#length() prevents it from add an empty value.
+                //It can happen when a comma is just after a closing-curly bracket
+            }else if(charAtI == ','){
+                if(buffer.length() > 0){
+                    this.values.add(buffer);
+                    buffer = "";
+                }else{
+                    continue;
+                }
+            }else{
+                buffer += charAtI;
+            }
+        }
     }
 
     @Override
     public String toString() {
-        String asArray = "";
+        String buffer = "";
 
-        if(this.name != null && this.name != ""){
-            asArray += "\"" + this.name + "\": ";
+        if(this.name != null) {
+            if (this.name.length() > 0)
+                buffer += this.name + ":";
         }
 
-        asArray += "[\n";
+        buffer += "[";
 
-        for(int i = 0; i < this.objects.size(); i++){
-            asArray += this.objects.get(i).toString();
+        for (int i = 0; i < this.objects.size(); i++){
 
-            if( i+1 < this.objects.size() || !this.arrays.isEmpty() || !this.values.isEmpty()){
-                asArray += ",";
+            buffer += this.objects.get(i).toString();
+
+            if(i < this.objects.size() - 1 || !this.arrays.isEmpty() || !this.values.isEmpty()){
+                buffer += ",";
             }
-
         }
 
-        for(int i = 0; i < this.arrays.size(); i++){
-            asArray += this.arrays.get(i).toString();
+        for (int i = 0; i < this.arrays.size(); i++){
 
-            if( i+1 < this.arrays.size() || !this.values.isEmpty()){
-                asArray += ",";
+            buffer += this.arrays.get(i).toString();
+
+            if(i < this.arrays.size() - 1 || !this.values.isEmpty()){
+                buffer += ",";
             }
-
         }
 
-        for(int i = 0; i < this.values.size(); i++){
+        for (int i = 0; i < this.values.size(); i++){
 
+            buffer += this.values.get(i);
 
-            asArray += "\"" + this.values.get(i) + "\"";
-
-            if( i+1 < this.values.size()){
-                asArray += ",";
+            if(i < this.values.size() - 1 ){
+                buffer += ",";
             }
-
         }
 
-        asArray += "\n]";
-
-        return asArray;
+        return buffer + "]";
     }
 }

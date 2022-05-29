@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Get the grade of the user
         //Given by login query
-        this.grade = Arrays.stream(GRADE.values()).filter( grade -> grade.getIndex() == this.getIntent().getIntExtra("Grade", 0)).findFirst().get();
+        this.grade = Arrays.stream(GRADE.values()).filter( grade -> grade.getIndex() == this.getIntent().getIntExtra("grade", 0)).findFirst().get();
     }
 
     /**

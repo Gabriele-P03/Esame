@@ -11,12 +11,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+        <CheckBox
+            android:id="@+id/list_users_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
         <!-- Id -->
         <TextView
                 android:id="@+id/list_users_id"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="@id/list_users_checkbox"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- First Name -->
@@ -24,11 +30,13 @@
                 android:id="@+id/list_users_name"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
                 app:layout_constraintLeft_toRightOf="@id/list_users_id"
                 app:layout_constraintTop_toTopOf="parent"/>
 
         <!-- Last-Name -->
         <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/list_users_lastname"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -37,6 +45,7 @@
 
         <!-- Birth-Day -->
         <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/list_users_birthday"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -45,6 +54,7 @@
 
         <!-- CF -->
         <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/list_users_cf"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -53,6 +63,7 @@
 
         <!-- Grade -->
         <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/list_users_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -61,6 +72,7 @@
 
         <!-- Username -->
         <TextView
+                android:layout_marginLeft="10dp"
                 android:id="@+id/list_users_username"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

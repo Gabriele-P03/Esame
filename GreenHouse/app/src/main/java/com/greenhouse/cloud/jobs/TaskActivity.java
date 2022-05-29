@@ -40,7 +40,7 @@ public class TaskActivity extends AppCompatActivity {
      * Analyst may only read data
      */
     private void loadAnalystTaskActivity() {
-        //startActivity Read Data
+        startActivity(new Intent(this.getApplicationContext(), GetActivity.class).putExtra("grade", this.getIntent().getIntExtra("grade", 0)));
     }
 
     /**
@@ -55,7 +55,7 @@ public class TaskActivity extends AppCompatActivity {
         Button readData = new Button(this.getApplicationContext());
         readData.setText("Read Data");
         readData.setId(View.generateViewId());
-        readData.setOnClickListener(l -> startActivity(new Intent(this.getApplicationContext(), GetActivity.class)));
+        readData.setOnClickListener(l -> startActivity(new Intent(this.getApplicationContext(), GetActivity.class).putExtra("grade", this.getIntent().getIntExtra("grade", 0))));
 
         ConstraintLayout layout = findViewById(R.id.task_activity_layout);
         layout.addView(newData);

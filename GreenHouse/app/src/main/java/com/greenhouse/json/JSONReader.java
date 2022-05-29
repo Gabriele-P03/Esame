@@ -1,79 +1,110 @@
 package com.greenhouse.json;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 /**
- * {@link JSONReader} provides json reading
+ *
+ * This is the object which provides json reading parsing.
+ * You can even pass an already json-string read, or a file
+ *
+ * Since a json file can either begin as object or array, the main-object type is not already defined.
+ * {@link JSONReader#compute(String)} will do it.
+ *
+ * You can retrieve the root element of the json file via {@link JSONReader#getRoot()},
+ * just use it after have checked its type
+ *
+ *
+ * @author Gabriele-P03
  */
 
 public class JSONReader {
 
-    private FileInputStream fis;
+    private Object object;
 
-    //This string represents json with \n and space
-    private String jsonAsString = "";
 
-    //JSON file always begins with curly brackets
-    private JSONObject mainObject;
+    public JSONReader(BufferedReader br) throws IOException {
+        String buffer = "";
+        String tmp = "";
+        while( (tmp = br.readLine()) != null ){
+            buffer += tmp;
+        }
 
+        this.compute(buffer);
+    }
     public JSONReader(String jsonAsString){
-        this.jsonAsString = jsonAsString;
-        this.parse();
+        this.compute(jsonAsString);
     }
 
-    public JSONReader(File file) throws IOException { this(new FileInputStream(file));}
-    public JSONReader(FileInputStream fis) throws IOException {
-        this.fis = fis;
-        this.readJSON();
+    private void compute(String jsonAsString){
+
+        //remove all space
+        jsonAsString = jsonAsString.trim()
+                .replaceAll("\"", "")
+                .replaceAll("\n", "")
+                .replaceAll(" ", "");
+
+        //Let's check if it empty
+        if(!jsonAsString.isEmpty()){
+            char first = jsonAsString.charAt(0);
+            if( first == '{' ){
+                this.object = new JSONObject("", jsonAsString.substring(1, jsonAsString.length()-1));
+            }else if(first == '['){
+                this.object = new JSONArray("", jsonAsString.substring(1, jsonAsString.length()-1));
+            }else{
+                throw new RuntimeException("JSON file does not begin either with '[' or '{'");
+            }
+        }
     }
 
     /**
-     * Once called, it read json file and save everything inside the mainObject
-     * @return
+     * Since it is stored, either being object or array, as object, you have to
+     * check its type by yourself
+     *
+     * @return the root element of the json file parsed
      */
-    private void readJSON() throws IOException {
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(this.fis));
-        String line = "";
-        while ( (line = br.readLine()) != null){
-            this.jsonAsString += line;
-        }
-        this.parse();
+    public Object getRoot() {
+        return this.object;
     }
 
-    private void parse() {
-        String fileAsString = String.copyValueOf(this.jsonAsString.toCharArray());
-        if (fileAsString.length() > 1) {
-            fileAsString = fileAsString
-                    .substring(1, fileAsString.length() - 1)  //Remove first and last curly brackets
-                    .replaceAll("\n", "")   //Remove \n
-                    .replaceAll(" ", "")    //Remove space
-                    .replaceAll("\"", "");  //Remove '"'
-
-
-            this.mainObject = new JSONObject(fileAsString);
-        }
+    /**
+     * If you're sure that the json file's root element is an object, you can even
+     * call this getter. Just make sure it hasn't returned null
+     * @return JSONObject or null
+     */
+    public JSONObject getRootObject(){
+        return this.object instanceof JSONObject ? (JSONObject) this.object : null;
     }
 
-    public void close(){
-        try {
-            this.fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    /**
+     * If you're sure that the json file's root element is an array, you can even
+     * call this getter. Just make sure it hasn't returned null
+     * @return JSONArray or null
+     */
+    public JSONArray getRootArray(){
+        return this.object instanceof JSONArray ? (JSONArray) this.object : null;
     }
 
-    public FileInputStream getFis() { return fis; }
-
-    public JSONObject getMainObject() {
-        return mainObject;
+    /**
+     * @return if the root element is an object
+     */
+    public boolean isRootObject(){
+        return this.object instanceof JSONObject;
     }
 
-    public static boolean isValidChar(char c) {return isNotBracket(c) && isNotColon(c) && isNotComma(c);}
-    public static boolean isNotColon(char c) {return c != ':';}
-    public static boolean isNotComma(char c) {return c != ',';}
-    public static boolean isNotBracket(char c){
-        return c != '[' && c != ']' && c != '{' && c != '}';
+    /**
+     * @return if the root element is an array
+     */
+    public boolean isRootArray(){
+        return this.object instanceof JSONArray;
     }
+
+    /**
+     * @return the root object/array. It doesn't mind what it is
+     */
+    public Object getObject() { return object; }
 }

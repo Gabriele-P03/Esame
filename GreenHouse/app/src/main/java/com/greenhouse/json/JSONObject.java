@@ -3,154 +3,146 @@ package com.greenhouse.json;
 import java.util.ArrayList;
 
 /**
- * An object in a json file is represented by curly brackets
+ *
+ * This is the abstraction of a JSON object.
+ *
+ * It can be either identified by a name or not have it.
+ *
+ * A JSON Object is identified only when it is inned in another one json object,
+ * otherwise it has never any name as identifier.
+ * When it is a no-identified object, the string name in {@link JSONObject#JSONObject(String, String)} is
+ * passed as empty string
+ *
+ * A JSON object can contains other {@link JSONObject}, {@link JSONArray} or {@link JSONMap}
+ * They're saved in an appropriate arraylist
+ *
+ * @author Gabriele-P03
  */
 
 public class JSONObject {
 
-     //to a key name not available for objects/arrays declared inside themselves, it can be null
     private String name;
+    private ArrayList<JSONObject> objects;
+    private ArrayList<JSONArray> arrays;
+    private ArrayList<JSONMap> maps;
 
-    private int length = 0;
-
-    private ArrayList<JSONObject> objects = new ArrayList<>();
-    private ArrayList<JSONMap> maps = new ArrayList<>();
-    private ArrayList<JSONArray> arrays = new ArrayList<>();
-
-    public JSONObject(){this("");}
-
-    public JSONObject(String objectAsString){
-        this("", objectAsString);
-    }
-
-
-    public JSONObject(String name, String objectAsString){
-
+    public JSONObject(String name, String jsonAsString) {
         this.name = name;
-        String tmp = "";
-
-        for(int index = 0; index < objectAsString.length(); index++){
-
-            char c = objectAsString.charAt(index);
-
-            //Lenght takes count of commas, brackets and colons, too
-            this.length++;
-
-            if(c == '}')
-                break;
-
-            if(JSONReader.isValidChar(c)){
-                tmp += c;
-            }else {
-
-                if (c == ':') {
-
-                    String nextChar = this.getNextChar(objectAsString, index);
-                    if(nextChar != "" && nextChar != null) {
-
-                        if (nextChar.equals("{")) {
-                            JSONObject object = new JSONObject(tmp, objectAsString.substring(index+1));
-                            this.objects.add(object);
-                            this.length += object.getLength();
-                            index += object.getLength();
-                        } else if (nextChar.equals("[")) {
-                            JSONArray array = new JSONArray(tmp, objectAsString.substring(index+1));
-                            this.arrays.add(array);
-                            this.length += array.getLength();
-                            index += array.getLength();
-                        } else if (nextChar.equals("}")) {
-                            break;
-                        } else if (nextChar.equals("]")) {
-                            continue;
-                        }else if(nextChar.equals(',')) {
-                            continue;
-                        }else{
-                            JSONMap map = new JSONMap(tmp, objectAsString.substring(index+1));
-                            this.maps.add(map);
-                            length += map.getValue().length();
-                            index += map.getValue().length();
-                        }
-                    }
-                }
-                tmp = "";
-            }
-        }
+        this.objects = new ArrayList<>();
+        this.arrays = new ArrayList<>();
+        this.maps = new ArrayList<>();
+        this.compute(jsonAsString);
     }
 
-    private String getNextChar(String string, int index){
-        return string.length() > index + 1? String.valueOf(string.charAt(index+1)) : null;
+    public void setName(String name) { this.name = name; }
+
+    public String getName() {
+        return name;
     }
 
+    public ArrayList<JSONObject> getObjects() {
+        return objects;
+    }
 
+    public ArrayList<JSONArray> getArrays() {
+        return arrays;
+    }
 
-    public void addObject(String objectAsString){ this.objects.add(new JSONObject(objectAsString)); }
-    public void addObject(JSONObject object){this.objects.add(object);}
-    public void addArray(String arrayAsString){ this.arrays.add(new JSONArray(arrayAsString)); }
-    public void addArray(JSONArray array){this.arrays.add(array);}
-    public void addMap(String mapAsString){ this.maps.add(new JSONMap(mapAsString)); }
-    public void addMap(JSONMap map){this.maps.add(map);}
-
-    public JSONObject[] getObjectByName(String name){ return this.objects.stream().filter(object -> object.getName().equals(name)).toArray(JSONObject[]::new); }
-    public JSONArray[] getArrayByName(String name){ return this.arrays.stream().filter(array -> array.getName().equals(name)).toArray(JSONArray[]::new); }
-    public JSONMap[] getMapByName(String name){ return this.maps.stream().filter(map -> map.getKey().equals(name)).toArray(JSONMap[]::new); }
-
-    public ArrayList<JSONObject> getObjects() { return objects; }
-    public ArrayList<JSONMap> getMaps() { return maps; }
-    public ArrayList<JSONArray> getArrays() { return arrays; }
-    public String getName() { return name; }
+    public ArrayList<JSONMap> getMaps() {
+        return maps;
+    }
 
     /**
-     *
-     * @return how many chars this object is composed of
+     * it computes the given json as string
+     * @param jsonAsString
      */
-    public int getLength(){
-        return this.length;
+    private void compute(String jsonAsString){
+
+        int length = jsonAsString.length();
+        String buffer = "";
+
+        for(int i = 0; i < jsonAsString.length(); i++){
+
+            char charAtI = jsonAsString.charAt(i);
+
+            if(charAtI == '}'){
+                break;
+            }else if(charAtI == ']'){
+                throw new RuntimeException("Square bracket not expected");
+            }else if(charAtI == ':'){
+                //It's beginning either a new object or array or value of map
+
+                //Check if it is over
+                if(i+1 < length){
+                    char next = jsonAsString.charAt(i+1);
+                    if(next == '{'){
+                        String subObjectAsString = jsonAsString.substring(i+2);
+                        int end = JSONParser.getIndexOfEndObject(subObjectAsString);
+                        this.objects.add(new JSONObject(buffer, subObjectAsString.substring(0, end)));
+                        i += 2 + end;
+                    }else if( next == '['){
+                        String subObjectAsString = jsonAsString.substring(i+2);
+                        int end = JSONParser.getIndexOfEndArray(subObjectAsString);
+                        this.arrays.add(new JSONArray(buffer, subObjectAsString.substring(0, end)));
+                        i += 2 + end;
+                    }else{
+                        String subObjectAsString = jsonAsString.substring(i+1);
+                        int end = JSONParser.getIndexOfEndMap(subObjectAsString);
+                        this.maps.add(new JSONMap(buffer, subObjectAsString.substring(0, end)));
+                        i += 1 + end;
+                    }
+
+                    buffer = "";
+                }else{
+                    throw new RuntimeException("JSON file finishes with a strange char...");
+                }
+
+            }else if(charAtI == ','){
+                continue;
+            }else{
+                buffer += charAtI;
+            }
+        }
     }
 
     @Override
     public String toString() {
-        String asString = "";
+        String buffer = "";
 
-        if(this.name != null && this.name != ""){
-            asString += "\"" + this.name + "\": ";
+        if(this.name != null) {
+            if (this.name.length() > 0)
+                buffer += this.name + ":";
         }
 
-        asString += "{\n";
+        buffer += "{";
 
-        for(int i = 0; i < this.objects.size(); i++){
-            asString += this.objects.get(i).toString();
+        for (int i = 0; i < this.objects.size(); i++){
 
-            if( i+1 < this.objects.size() || !this.arrays.isEmpty() || !this.maps.isEmpty()){
-                asString += ",";
+            buffer += this.objects.get(i).toString();
+
+            if(i < this.objects.size() - 1 || !this.arrays.isEmpty() || !this.maps.isEmpty()){
+                buffer += ",";
             }
-
-            asString += "\n";
         }
 
+        for (int i = 0; i < this.arrays.size(); i++){
 
-        for(int i = 0; i < this.arrays.size(); i++){
-            asString += this.arrays.get(i).toString();
+            buffer += this.arrays.get(i).toString();
 
-            if( i+1 < this.arrays.size() || !this.maps.isEmpty()){
-                asString += ",";
+            if(i < this.arrays.size() - 1 || !this.maps.isEmpty()){
+                buffer += ",";
             }
-
-            asString += "\n";
         }
 
+        for (int i = 0; i < this.maps.size(); i++){
 
-        for(int i = 0; i < this.maps.size(); i++){
-            asString += this.maps.get(i).toString();
+            buffer += this.maps.get(i).toString();
 
-            if( i+1 < this.maps.size()){
-                asString += ",";
+            if(i < this.maps.size() - 1 ){
+                buffer += ",";
             }
-
-            asString += "\n";
         }
 
-        asString += "\n}";
-
-        return asString;
+        return buffer + "}";
     }
 }

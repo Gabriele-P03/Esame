@@ -12,10 +12,7 @@ package com.greenhouse.cloud.jobs;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.NumberPicker;
-import android.widget.TextView;
+import android.widget.*;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,7 +24,9 @@ import com.greenhouse.cloud.collector.UsersListAdapter;
 
 public class GetActivity extends AppCompatActivity {
 
+    private Button getButton;
     private CheckBox insideGH, outsideGH;
+    private ListView listViewUsers;
 
     //Is is used only to set constraint automatically
     private TextView max_leaves_tv;
@@ -57,6 +56,9 @@ public class GetActivity extends AppCompatActivity {
     private void loadComponents() {
 
         this.max_leaves_tv = findViewById(R.id.get_max_leaves_tv);
+        this.listViewUsers = findViewById(R.id.users_list_view_get_activity);
+        this.getButton = findViewById(R.id.get_data_button);
+        this.getButton.setOnClickListener(l -> performGetData());
 
         this.pickers[0] = findViewById(R.id.get_min_height_picker);
         this.pickers[1] = findViewById(R.id.get_max_height_picker);
@@ -125,17 +127,24 @@ public class GetActivity extends AppCompatActivity {
                     }
                 }
 
-                //If the user is not an employee, it provides getting method to retrieve data of every employee
-                if(this.getIntent().getIntExtra("grade", 0) > 0){
-                    UserCollector userCollector = new UserCollector(this.getApplicationContext());
-                    ListView listView = new ListView(this.getApplicationContext());
-                    listView.setAdapter(new UsersListAdapter(userCollector, this.getApplicationContext()));
-                }
-
             }else{
                 throw new RuntimeException("Could not retrieve the constraint layout...");
             }
 
         });
+
+        //If the user is not an employee, it provides getting method to retrieve data of every employee
+        if(this.getIntent().getIntExtra("grade", 0) > 0){
+            UserCollector userCollector = new UserCollector(this.getApplicationContext());
+            listViewUsers.setAdapter(new UsersListAdapter(userCollector, this.getApplicationContext()));
+        }
     }
+
+    /**
+     * Called when user clicks on Get Data Button
+     * It
+     */
+    private void performGetData() {
+    }
+
 }
