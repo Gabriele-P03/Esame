@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/db_layout"
+        android:id="@+id/put_task_layout"
         android:background="@drawable/background"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -9,23 +9,6 @@
         android:layout_height="match_parent"
         tools:context=".cloud.jobs.employee.PutActivity">
 
-    <!-- Info about db connection-->
-    <TextView
-            android:id="@+id/db_state_tv"
-            android:textColor="@color/white"
-            android:textSize="30dp"
-            android:text="DB offline..."
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/out_in_switch"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/horizontal_picker_layout_db"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-    />
-
     <Switch
             android:showText="true"
             android:id="@+id/out_in_switch"
@@ -33,9 +16,10 @@
             android:textOff="Inside"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/db_state_tv"
+            app:layout_constraintRight_toLeftOf="@id/send_data_button"
+            app:layout_constraintLeft_toRightOf="@id/dismiss_send_data_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/date_picker"
             android:layout_marginTop="15dp"
             android:layout_marginRight="10dp"
     />
@@ -48,7 +32,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:fillViewport="true"
-            app:layout_constraintTop_toBottomOf="@id/db_state_tv"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent">
 
@@ -131,7 +115,7 @@
 
     <Button
             android:backgroundTint="#888888"
-            android:id="@+id/dismiss_new_seed_button"
+            android:id="@+id/dismiss_send_data_button"
             android:text="dismiss"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -148,7 +132,7 @@
             app:layout_constraintTop_toBottomOf="@id/horizontal_picker_layout_db"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/dismiss_new_seed_button"
+            app:layout_constraintBottom_toTopOf="@id/dismiss_send_data_button"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
@@ -157,7 +141,7 @@
 
     <Button
             android:backgroundTint="#888888"
-            android:id="@+id/save_new_seed_button"
+            android:id="@+id/send_data_button"
             android:text="SEND"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

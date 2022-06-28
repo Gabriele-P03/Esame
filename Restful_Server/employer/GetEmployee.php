@@ -42,4 +42,6 @@
             header("HTTP/1.0 " . mysqli_errno($connection) . " SQL_ERROR");
         }
     }
+
+    mysqli_close($connection);
 ?>

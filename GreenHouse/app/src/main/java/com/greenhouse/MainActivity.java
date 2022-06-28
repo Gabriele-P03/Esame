@@ -22,6 +22,7 @@ import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.greenhouse.blt.BluetoothActivity;
+import com.greenhouse.cloud.collector.users.User;
 import com.greenhouse.cloud.jobs.GRADE;
 import com.greenhouse.cloud.jobs.TaskActivity;
 import com.greenhouse.settings.Settings;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public static TextView[] textViews = new TextView[3];
 
     private static Seed SEED;
-
+    public static User USER;
     private GRADE grade;
 
     @Override

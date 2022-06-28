@@ -7,10 +7,12 @@
  * @author Gabriele-P03
  */
 
-package com.greenhouse.cloud.jobs;
+package com.greenhouse.cloud.jobs.get_data;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.RequiresApi;
@@ -18,14 +20,31 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import com.greenhouse.MainActivity;
 import com.greenhouse.R;
-import com.greenhouse.cloud.collector.UserCollector;
-import com.greenhouse.cloud.collector.UsersListAdapter;
+import com.greenhouse.cloud.collector.data.DataListAdapter;
+import com.greenhouse.cloud.collector.data.InsideData;
+import com.greenhouse.cloud.collector.data.OutsideData;
+import com.greenhouse.cloud.collector.users.User;
+import com.greenhouse.cloud.collector.users.UserCollector;
+import com.greenhouse.cloud.collector.users.UsersListAdapter;
+import com.greenhouse.cloud.jobs.Task;
+import com.greenhouse.cloud.jobs.TaskActivity;
+import com.greenhouse.json.JSONArray;
+import com.greenhouse.json.JSONReader;
+import com.greenhouse.settings.Settings;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 public class GetActivity extends AppCompatActivity {
 
     private Button getButton;
-    private CheckBox insideGH, outsideGH;
+    private Switch inOutSwitch;
     private ListView listViewUsers;
 
     //Is is used only to set constraint automatically
@@ -58,7 +77,7 @@ public class GetActivity extends AppCompatActivity {
         this.max_leaves_tv = findViewById(R.id.get_max_leaves_tv);
         this.listViewUsers = findViewById(R.id.users_list_view_get_activity);
         this.getButton = findViewById(R.id.get_data_button);
-        this.getButton.setOnClickListener(l -> performGetData());
+        this.getButton.setOnClickListener(l -> new GetTask(this.getApplicationContext(), l).execute(this.performParams()));
 
         this.pickers[0] = findViewById(R.id.get_min_height_picker);
         this.pickers[1] = findViewById(R.id.get_max_height_picker);
@@ -83,16 +102,15 @@ public class GetActivity extends AppCompatActivity {
 
         for (int i = 0; i < this.pickers.length; i++){
             this.pickers[i].setMinValue(0);
-            this.pickers[i].setMaxValue(100);
+            this.pickers[i].setMaxValue(1000);
         }
 
-        this.insideGH = findViewById(R.id.get_inside_gh_cb);
-        this.outsideGH = findViewById(R.id.get_outside_gh_cb);
+        this.inOutSwitch = findViewById(R.id.out_in_switch);
 
         ConstraintLayout layout = findViewById(R.id.scroll_view_get_activity).findViewById(R.id.scroll_view_get_activity_const_layout);
         ConstraintSet set = new ConstraintSet();
 
-        this.outsideGH.setOnCheckedChangeListener( (cView, isChecked) -> {
+        this.inOutSwitch.setOnCheckedChangeListener( (cView, isChecked) -> {
 
 
             if(layout != null) {
@@ -136,15 +154,105 @@ public class GetActivity extends AppCompatActivity {
         //If the user is not an employee, it provides getting method to retrieve data of every employee
         if(this.getIntent().getIntExtra("grade", 0) > 0){
             UserCollector userCollector = new UserCollector(this.getApplicationContext());
+            listViewUsers = findViewById(R.id.users_list_view_get_activity);
             listViewUsers.setAdapter(new UsersListAdapter(userCollector, this.getApplicationContext()));
         }
     }
 
-    /**
-     * Called when user clicks on Get Data Button
-     * It
-     */
-    private void performGetData() {
+    private String performParams() {
+        String idsAsString = "";  //It will contain all ID of users selected to get inserted data (or simply harvester's one)
+
+        int grade = this.getIntent().getIntExtra("grade", 0 );
+
+        if(grade == 0){
+            idsAsString = String.valueOf(MainActivity.USER.getGrade().getIndex());
+        }else {
+            ArrayList<String> idsAsList = new ArrayList<>();
+            ListAdapter listAdapter = this.listViewUsers.getAdapter();
+            for (int i = 0; i < listAdapter.getCount(); i++) {
+
+                if(((CheckBox)this.listViewUsers.findViewById(R.id.list_users_checkbox)).isChecked()) {
+                    Object obj = listAdapter.getItem(i);
+
+                    //Should be always true
+                    if (obj instanceof User) {
+                        idsAsList.add(String.valueOf(((User) obj).getID_employee()));
+                    } else {
+                        throw new RuntimeException("Error during performing users...");
+                    }
+                }
+            }
+
+            //Now let's retrieve all ids as a single string
+            idsAsString = idsAsList.toString().replace("[","").replace("]","").replaceAll("\\s","").trim();;
+        }
+
+        return "usr=" + MainActivity.USER.getID_employee() +
+                "&grade=" + MainActivity.USER.getGrade().getIndex() +
+                "&inside=" + !this.inOutSwitch.isChecked() +
+                "&minHeight=" + this.pickers[0].getValue() +
+                "&maxHeight=" + this.pickers[1].getValue() +
+                "&minPlants=" + this.pickers[2].getValue() +
+                "&maxPlants=" + this.pickers[3].getValue() +
+                "&minLeaves=" + this.pickers[4].getValue() +
+                "&maxLeaves=" + this.pickers[5].getValue() +
+
+                (this.inOutSwitch.isChecked() ?
+                        "&minTemperature=" + this.pickers[6].getValue() +
+                        "&maxTemperature=" + this.pickers[7].getValue() +
+                        "&minHumidity=" + this.pickers[8].getValue() +
+                        "&maxHumidity=" + this.pickers[9].getValue() +
+                        "&minLight=" + this.pickers[10].getValue() +
+                        "&maxLight=" + this.pickers[11].getValue()
+
+                        : "") +
+
+                (grade == 0 ? "" : ("&users=" + idsAsString));
+    }
+
+    private class GetTask extends Task {
+
+        View l;
+        public GetTask(Context context, View l) {
+            super(context);
+            this.l = l;
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            return super.doInBackground("Select.php?" + strings[0]);
+        }
+
+        @Override
+        protected void onPostExecute(Integer s) {
+
+            //Print any errors occurred
+            if(s != 200)
+                Toast.makeText(this.context, s.intValue() + " : " + this.result, Toast.LENGTH_SHORT).show();
+            else{
+
+                //Parsing array of record retrieved by the sql query
+                JSONArray array = new JSONReader(this.result).getRootArray();
+                if(array != null){
+
+                    DataListAdapter<?> listAdapter;
+                    //If the switch is checked, outside query is done
+                    if(inOutSwitch.isChecked()){
+                        listAdapter = new DataListAdapter<OutsideData>(this.context, array, OutsideData.class, getIntent().getIntExtra("grade", 0));
+                    }else{
+                        listAdapter = new DataListAdapter<>(this.context, array, InsideData.class, getIntent().getIntExtra("grade", 0));
+                    }
+
+                    LayoutInflater li = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+                    View popupView = li.inflate(R.layout.data_list_view_layout, null);
+                    ((HorizontalScrollView)popupView.findViewById(R.id.data_list_view_scrollLayout)).setFillViewport( !inOutSwitch.isChecked() );
+                    final PopupWindow popupWindow = new PopupWindow(popupView, ConstraintLayout.LayoutParams.MATCH_PARENT, ConstraintLayout.LayoutParams.MATCH_PARENT, false);
+                    popupWindow.showAsDropDown(this.l);
+
+                    ((ListView)popupView.findViewById(R.id.data_list_view)).setAdapter(listAdapter);
+                }
+            }
+        }
     }
 
 }

@@ -9,8 +9,15 @@ import android.os.Bundle;
 import com.greenhouse.LoginActivity;
 import com.greenhouse.MainActivity;
 import com.greenhouse.R;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import java.io.File;
 import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -37,7 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
             Settings.port = this.port.getText().toString();
             Settings.saveConf(this.getApplicationContext());
             this.dismissActivitySettings(this.getCurrentFocus());
-        } catch (IOException e) {
+        } catch (IOException | InvalidKeyException | BadPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | NoSuchPaddingException | InvalidAlgorithmParameterException e) {
             e.printStackTrace();
         }
     }

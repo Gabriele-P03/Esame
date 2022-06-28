@@ -8,6 +8,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import com.greenhouse.cloud.LoginRequest;
+import com.greenhouse.settings.EncryptFunc;
 import com.greenhouse.settings.Settings;
 import com.greenhouse.settings.SettingsActivity;
 
@@ -37,13 +38,12 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        /*
-            Before log-in layout is shown, it is gonna check if the check box which
-            allows to remember last credentials has been selected previously
-         */
         try {
+            /*
+                Before log-in layout is shown, it checks if the remember credentials check-box is checked
+             */
             Settings.loadConf(this.getApplicationContext());
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -81,7 +81,12 @@ public class LoginActivity extends Activity {
 
         this.loginBT.setOnClickListener(l -> {
             Settings.rememberLogin = this.rememberLoginCB.isChecked();
-            new LoginRequest(this.getApplicationContext()).execute(this.usr.getText().toString(), this.psw.getText().toString());
+            try {
+                EncryptFunc encryptFunc = new EncryptFunc();
+                new LoginRequest(this.getApplicationContext()).execute(
+                        encryptFunc.encrypt(this.usr.getText().toString()),
+                        encryptFunc.encrypt(this.psw.getText().toString()));
+            }catch (Exception e){e.printStackTrace();}
         });
     }
 }

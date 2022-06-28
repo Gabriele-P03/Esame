@@ -1,4 +1,4 @@
-package com.greenhouse.cloud.collector;
+package com.greenhouse.cloud.collector.users;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -51,24 +51,8 @@ public class UserCollector {
 
         @Override
         protected Integer doInBackground(String... strings) {
-
-                try {
-                    this.URL = new URL("http://" + Settings.IP + ":" + Settings.port + "/employer/GetEmployee.php");
-                    this.httpURLConnection = (HttpURLConnection) this.URL.openConnection();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(this.httpURLConnection.getInputStream()));
-
-                    String buffer = "";
-                    this.result = "";
-                    while( (buffer = br.readLine()) != null){
-                        this.result += buffer;
-                    }
-
-                    return this.httpURLConnection.getResponseCode();
-                } catch (IOException e) {
-                    this.result = e.getMessage();
-                    return -1;
-                }
-            }
+            return super.doInBackground("employer/GetEmployee.php");
+        }
 
         @Override
         protected void onPostExecute(Integer s) {

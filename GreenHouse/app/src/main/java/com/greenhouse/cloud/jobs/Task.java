@@ -43,7 +43,7 @@ public class Task extends AsyncTask<String, String, Integer> {
         try {
 
                 //For security reasons, before every query, even if the user is already authenticated, it must be done again
-                this.URL = new URL("http://" + Settings.IP + ":" + Settings.port + "/login.php?usr=" + strings[0] + "&psw=" + strings[1]);
+                this.URL = new URL("http://" + Settings.IP + ":" + Settings.port + "/" + strings[0]);
                 this.httpURLConnection = (HttpURLConnection) this.URL.openConnection();
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(this.httpURLConnection.getInputStream()));
@@ -69,9 +69,9 @@ public class Task extends AsyncTask<String, String, Integer> {
 
     @Override
     protected void onPostExecute(Integer s) {
-
-        //If no errors occurred, it doesn't matter to print any toast
-        if(s.intValue() != 200)
+        if(s == 200)
+            Toast.makeText(this.context, "OK" + this.result, Toast.LENGTH_SHORT).show();
+        else
             Toast.makeText(this.context, " " + s.intValue() + ": " + this.result, Toast.LENGTH_SHORT).show();
     }
 

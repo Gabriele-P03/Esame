@@ -10,8 +10,27 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import com.greenhouse.R;
 import com.greenhouse.cloud.jobs.employee.PutActivity;
-import static com.greenhouse.cloud.jobs.GRADE.ANALYST;
-import static com.greenhouse.cloud.jobs.GRADE.EMPLOYEE;
+import com.greenhouse.cloud.jobs.get_data.GetActivity;
+
+/**
+ * This is the layout which is rendered when user clicks Task button from the menu popup.
+ *
+ * It provides some tasks depending on the {@link GRADE}, which is passed as IntegerExtra, of the user:
+ *
+ * 0: harvester
+ *      - Insert Data
+ *      - Read only own data
+ *
+ * 1: analyst
+ *      - Read all data
+ *
+ * 2: CEO
+ *      - Read all data
+ *      - Edit all data
+ *      - Remove all data
+ *
+ * @author Gabriele-P03
+ */
 
 public class TaskActivity extends AppCompatActivity {
 
@@ -32,6 +51,13 @@ public class TaskActivity extends AppCompatActivity {
 
             case 1:
                 this.loadAnalystTaskActivity();
+            break;
+
+            case 2:
+                this.loadAnalystTaskActivity();
+            break;
+
+            default:
 
         }
     }

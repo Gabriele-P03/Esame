@@ -5,9 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 import com.greenhouse.MainActivity;
+import com.greenhouse.cloud.collector.users.User;
 import com.greenhouse.cloud.jobs.Task;
+import com.greenhouse.json.JSONReader;
 import com.greenhouse.settings.Settings;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -31,19 +36,15 @@ public class LoginRequest extends Task {
     @Override
     protected Integer doInBackground(String... strings) {
 
-        //Super-call opens the connection with the server
-        int responseCode = super.doInBackground(strings);
+        int statusCode = super.doInBackground("login.php?usr=" + strings[0] + "&psw=" + strings[1]);
 
-        //200 in HTTP means all ok, then it is gonna starting MainActivity after have saved new credentials
-        if(responseCode == 200){
+        if (statusCode == 200){
             Settings.username = strings[0];
             Settings.password = strings[1];
         }
 
-        return responseCode;
+        return statusCode;
     }
-
-
 
 
     /**
@@ -58,14 +59,23 @@ public class LoginRequest extends Task {
     protected void onPostExecute(Integer result) {
 
         if(result.intValue() == 200) {
+
+            //Save credentials if authorized
             if(Settings.rememberLogin) {
-                try { Settings.saveConf(this.context); } catch (IOException e) { e.printStackTrace(); }
+                try { Settings.saveConf(this.context); } catch (Exception e) { e.printStackTrace(); }
             }
+
+            //Saving user information
+            MainActivity.USER = new User(new JSONReader(this.result).getRootObject());
+
+            //Saving grade
             context.startActivity(new Intent(context, MainActivity.class)
                     .addFlags(FLAG_ACTIVITY_NEW_TASK)
-                    .putExtra("grade", Integer.parseInt(this.result)));
+                    .putExtra("grade", MainActivity.USER.getGrade().getIndex()));
+
+
         }
-        else if (result.intValue() == 401){
+        else if (result.intValue() == 403){
             Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(context, Settings.IP + ":" + Settings.port + " response status code: " + result.intValue() + " - " + this.result, Toast.LENGTH_LONG).show();

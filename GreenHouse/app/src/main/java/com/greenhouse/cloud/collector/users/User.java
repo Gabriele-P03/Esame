@@ -1,4 +1,4 @@
-package com.greenhouse.cloud.collector;
+package com.greenhouse.cloud.collector.users;
 
 import com.greenhouse.cloud.jobs.GRADE;
 import com.greenhouse.json.JSONObject;
@@ -37,8 +37,8 @@ public class User {
                 object.getMaps().get(1).getValue(),
                 object.getMaps().get(2).getValue(),
                 object.getMaps().get(3).getValue(),
-                object.getMaps().get(4).getValue(),
                 object.getMaps().get(5).getValue(),
+                object.getMaps().get(4).getValue(),
                 Arrays.stream(GRADE.values()).filter( grade1 -> grade1.getIndex() == Integer.parseInt(object.getMaps().get(6).getValue())).findFirst().get(),
                 object.getMaps().get(7).getValue()
                 );
@@ -99,5 +99,13 @@ public class User {
 
     public void setGrade(GRADE grade) {
         this.grade = grade;
+    }
+
+    public int getID_fk_ceo() {
+        return ID_fk_ceo;
+    }
+
+    public void setID_fk_ceo(int ID_fk_ceo) {
+        this.ID_fk_ceo = ID_fk_ceo;
     }
 }

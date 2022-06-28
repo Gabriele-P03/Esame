@@ -18,6 +18,7 @@
 
 package com.greenhouse.cloud.jobs.employee;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
@@ -27,13 +28,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
+import com.greenhouse.MainActivity;
 import com.greenhouse.R;
-import com.greenhouse.cloud.jobs.employee.Put;
-import com.greenhouse.settings.Settings;
+import com.greenhouse.cloud.jobs.Task;
 
 public class PutActivity extends AppCompatActivity {
 
-    private TextView DB_state;
     private Switch ghSwitch;
     private NumberPicker[] pickers;
     private TextView[] tvs;
@@ -43,7 +43,7 @@ public class PutActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_data_base);
+        setContentView(R.layout.activity_put);
 
         this.loadComponents();
     }
@@ -76,7 +76,8 @@ public class PutActivity extends AppCompatActivity {
      */
     private String getRequestParameter(){
         String params =
-                "usr=" + Settings.username
+                "usr=" + MainActivity.USER.getID_employee()
+             + "&grade=" + MainActivity.USER.getGrade().getIndex()
              + "&type_gh=" + (this.ghSwitch.isChecked() ? "o" : "i")
              + "&date='" + this.datePicker.getYear() + "-" + (this.datePicker.getMonth()+1) + "-" + this.datePicker.getDayOfMonth()
              + "'&max_height=" + this.pickers[0].getValue()
@@ -84,10 +85,11 @@ public class PutActivity extends AppCompatActivity {
              + "&leaves=" + this.pickers[2].getValue();
 
         if(this.ghSwitch.isChecked()){
-            params += "&temperature=" + this.pickers[3].getValue() + "&humidity=" + this.pickers[4].getValue();
+            params += "&temperature=" + this.pickers[3].getValue() + "&humidity=" + this.pickers[4].getValue() + "&light=" + this.pickers[5].getValue();
         }
 
-        Toast.makeText(this.getApplicationContext(), params, Toast.LENGTH_LONG).show();
+        //Used in debug mode: print params list to send to the http request POST
+        //Toast.makeText(this.getApplicationContext(), params, Toast.LENGTH_LONG).show();
         return params;
     }
 
@@ -95,25 +97,27 @@ public class PutActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void loadComponents(){
-        this.DB_state = findViewById(R.id.db_state_tv);
-
         this.datePicker = findViewById(R.id.date_picker);
         this.datePicker.setMaxDate(System.currentTimeMillis());
 
-        this.tvs = new TextView[5];
+        this.tvs = new TextView[6];
         this.tvs[0] = findViewById(R.id.db_max_height_tv);
         this.tvs[1] = findViewById(R.id.db_plants_tv);
         this.tvs[2] = findViewById(R.id.db_leaves_tv);
         this.tvs[3] = new TextView(this.getApplicationContext());
-        this.tvs[3].setText("Temperatura");
+        this.tvs[3].setText("Temperature");
         this.tvs[3].setTextColor(Color.WHITE);
         this.tvs[3].setId(View.generateViewId());
         this.tvs[4] = new TextView(this.getApplicationContext());
-        this.tvs[4].setText("Umidità");
+        this.tvs[4].setText("Humidity");
         this.tvs[4].setTextColor(Color.WHITE);
         this.tvs[4].setId(View.generateViewId());
+        this.tvs[5] = new TextView(this.getApplicationContext());
+        this.tvs[5].setText("Light");
+        this.tvs[5].setTextColor(Color.WHITE);
+        this.tvs[5].setId(View.generateViewId());
 
-        this.pickers = new NumberPicker[5];
+        this.pickers = new NumberPicker[6];
         this.pickers[0] = findViewById(R.id.db_max_height_picker);
         this.pickers[1] = findViewById(R.id.db_plants_picker);
         this.pickers[2] = findViewById(R.id.db_leaves_picker);
@@ -122,19 +126,21 @@ public class PutActivity extends AppCompatActivity {
         this.pickers[3].setId(View.generateViewId());
         this.pickers[4] = new NumberPicker(this.getApplicationContext());
         this.pickers[4].setId(View.generateViewId());
+        this.pickers[5] = new NumberPicker(this.getApplicationContext());
+        this.pickers[5].setId(View.generateViewId());
 
-        for(int i = 0; i < 5; i++){
+        for(int i = 0; i < 6; i++){
             this.pickers[i].setMaxValue( (i >= 3 ? 100 : 500) );
             this.pickers[i].setMinValue(0);
             this.pickers[i].setTextSize(20);
         }
-        for(int i = 3; i < 5; i++){
+
+        for(int i = 3; i < 6; i++){
             this.tvs[i].setTextSize(20);
             this.tvs[i].setTextColor(this.tvs[0].getTextColors());
             this.pickers[i].setMinimumWidth(ConstraintLayout.LayoutParams.MATCH_PARENT);
             this.pickers[i].setTextColor(this.pickers[i].getTextColor());
         }
-
 
 
         this.ghSwitch = findViewById(R.id.out_in_switch);
@@ -147,8 +153,10 @@ public class PutActivity extends AppCompatActivity {
 
                 currentLayout.addView(this.tvs[3], 0);
                 currentLayout.addView(this.tvs[4], 0);
+                currentLayout.addView(this.tvs[5], 0);
                 currentLayout.addView(this.pickers[3], 0);
                 currentLayout.addView(this.pickers[4], 0);
+                currentLayout.addView(this.pickers[5], 0);
                 set.clone(currentLayout);
 
                 set.connect(this.tvs[3].getId(), ConstraintSet.TOP, this.tvs[2].getId(), ConstraintSet.TOP);
@@ -163,15 +171,35 @@ public class PutActivity extends AppCompatActivity {
                 set.connect(this.pickers[4].getId(), ConstraintSet.RIGHT, this.tvs[4].getId(), ConstraintSet.RIGHT);
                 set.connect(this.pickers[4].getId(), ConstraintSet.LEFT, this.tvs[4].getId(), ConstraintSet.LEFT);
 
+                set.connect(this.tvs[5].getId(), ConstraintSet.TOP, this.tvs[4].getId(), ConstraintSet.TOP);
+                set.connect(this.tvs[5].getId(), ConstraintSet.LEFT, this.tvs[4].getId(), ConstraintSet.RIGHT, 20);
+                set.connect(this.pickers[5].getId(), ConstraintSet.TOP, this.tvs[5].getId(), ConstraintSet.BOTTOM);
+                set.connect(this.pickers[5].getId(), ConstraintSet.RIGHT, this.tvs[5].getId(), ConstraintSet.RIGHT);
+                set.connect(this.pickers[5].getId(), ConstraintSet.LEFT, this.tvs[5].getId(), ConstraintSet.LEFT);
+
                 set.connect(this.tvs[2].getId(), ConstraintSet.RIGHT, this.tvs[3].getId(), ConstraintSet.LEFT);
 
                 set.applyTo(currentLayout);
             }else{
                 currentLayout.removeView(this.tvs[3]);
                 currentLayout.removeView(this.tvs[4]);
+                currentLayout.removeView(this.tvs[5]);
                 currentLayout.removeView(this.pickers[3]);
                 currentLayout.removeView(this.pickers[4]);
+                currentLayout.removeView(this.pickers[5]);
             }
         });
+    }
+
+    private class Put extends Task {
+
+        public Put(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected Integer doInBackground(String... strings) {
+            return super.doInBackground("employee/Put.php?" + strings[0]);
+        }
     }
 }

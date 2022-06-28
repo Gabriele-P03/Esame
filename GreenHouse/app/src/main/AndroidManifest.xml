@@ -19,7 +19,7 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.GreenHouse"
             android:usesCleartextTraffic="true">
-        <activity android:name=".cloud.jobs.GetActivity">
+        <activity android:name=".cloud.jobs.get_data.GetActivity">
         </activity>
         <activity android:name=".LoginActivity">
             <intent-filter>
